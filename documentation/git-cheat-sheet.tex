@@ -1,0 +1,78 @@
+\documentclass{article}
+
+% Shell lines
+\usepackage{xcolor}
+\usepackage{listings}
+\lstdefinestyle{BashInputStyle}{
+  language=bash,
+  basicstyle=\small\sffamily,
+  numbers=left,
+  numberstyle=\tiny,
+  numbersep=3pt,
+  frame=tb,
+  columns=fullflexible,
+  backgroundcolor=\color{yellow!20},
+  linewidth=0.9\linewidth,
+  xleftmargin=0.1\linewidth
+}
+
+\title{Git Cheat Sheet}
+\author{Patrick Rabier}
+
+\begin{document}
+\maketitle
+
+\section{Basic Git Branching}
+
+This section will help you manipulate branches
+
+\subsection{Displaying existing branches}
+\begin{lstlisting}[style=BashInputStyle]
+    #  git branch
+\end{lstlisting}
+
+\subsection{Creating a branch}
+Use the following command to create a branch :
+\begin{lstlisting}[style=BashInputStyle]
+    # git branch [branch name]
+\end{lstlisting}
+This only creates the branch. It does not switch to it
+
+\subsection{Switching to a branch}
+\begin{lstlisting}[style=BashInputStyle]
+    #  git checkout [branch name]
+\end{lstlisting}
+Modifications you make on a branch won't affect other branches
+
+\subsection{Pushing a branch to a remote repository}
+\begin{lstlisting}[style=BashInputStyle]
+    # git push [repository] [branch name]
+\end{lstlisting}
+If the branch doesn't exist on the remote repository, it will be created.
+If the branch already exists, it will be updated with the latest commits
+Example :
+\begin{lstlisting}[style=BashInputStyle]
+    # git push origin mybranch
+\end{lstlisting}
+'origin' is typically the main repository. However, others may be added using the following command :
+\begin{lstlisting}[style=BashInputStyle]
+    # git remote add [repository name] [repository url]
+\end{lstlisting}
+
+\subsection{Deleting a local branch}
+\begin{lstlisting}[style=BashInputStyle]
+    #  git branch -d [branch name]
+\end{lstlisting}
+This will only delete the branch locally
+
+\subsection{Deleting a remote branch}
+\begin{lstlisting}[style=BashInputStyle]
+    #  git push [remote repository name] :[branch name]
+\end{lstlisting}
+This will only delete the branch on the remote repository
+Example :
+\begin{lstlisting}[style=BashInputStyle]
+    #  git push origin :mybranch
+\end{lstlisting}
+
+\end{document}
