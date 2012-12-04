@@ -1,0 +1,16 @@
+#!/bin/bash
+# Executed before a commit is made
+
+if [[ `git symbolic-ref HEAD` == "refs/head/master" ]]
+then
+	echo "==========================="
+	echo "DEAR DEVELOPERS"
+	echo "You cannot commit in master!"
+	echo "Only merges can be made"
+	echo "Ask Le Patrick why !"
+	echo "If your name is not marcel_c and you are sure of what you are doing,"
+	echo "then run git commit with the --no-verify flag, it should work"
+	echo "Hopefully you won't have to"
+	echo "Cheers !"
+	echo "==========================="
+fi
