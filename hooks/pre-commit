@@ -7,12 +7,11 @@ if [[ `git symbolic-ref HEAD` == "refs/heads/master" ]]
 then
 	echo "==========================="
 	echo "DEAR DEVELOPERS"
-	echo "You cannot commit in master!"
-	echo "Only merges can be made"
+	echo "You should not commit in master!"
+	echo "Only merges should be made"
 	echo "Ask Le Patrick why !"
-	echo "If your name is not marcel_c and you are sure of what you are doing,"
-	echo "then run git commit with the --no-verify flag, it should work"
-	echo "Hopefully you won't have to"
+	echo "If you have a good reason to do it then run git commit with the --no-verify flag"
+	echo "(conflicts and stuff like that)"
 	echo "Cheers !"
 	echo "==========================="
 	exit 1
