@@ -83,6 +83,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\humble\HumbleXnaLibrary\HumbleXnaLibrary.csproj">
+      <Project>{CF315566-7A2A-4016-BD8A-E478427BC6B5}</Project>
+      <Name>HumbleXnaLibrary</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ExhibeatContent\ExhibeatContent.contentproj">
       <Name>ExhibeatContent</Name>
       <XnaReferenceType>Content</XnaReferenceType>
