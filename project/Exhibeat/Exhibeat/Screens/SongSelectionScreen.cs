@@ -9,24 +9,20 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Exhibeat.Screens
 {
-    class MainMenuScreen : Screen
+    /// <summary>
+    /// Ce screen propose au joueur les chansons
+    /// TODO : prevoir un screen pour le tps de chargement des chansons
+    /// Ce screen push les GameScreens pour lancer les parties
+    /// </summary>
+    class SongSelectionScreen : Screen
     {
-
-#if DEBUG
-        private SpriteFont plainfont;
-#endif
-
-
-        public MainMenuScreen(HumbleGame game) : base(game)
+        public SongSelectionScreen(HumbleGame game)
+            : base(game)
         {
         }
 
         public override void Initialize()
         {
-#if DEBUG
-            plainfont = Content.Load<SpriteFont>("plain");
-#endif
-
             base.Initialize();
         }
 
@@ -47,10 +43,6 @@ namespace Exhibeat.Screens
 
         public override void Draw()
         {
-            SpriteBatch.Begin();
-            SpriteBatch.DrawString(plainfont, "Menu Screen", new Vector2(0, 20), Color.White);
-            SpriteBatch.End();
-
             base.Draw();
         }
     }
