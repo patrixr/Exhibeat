@@ -9,6 +9,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Humble;
+using Humble.Components;
+using Exhibeat.Screens;
 
 namespace Exhibeat
 {
@@ -17,12 +19,18 @@ namespace Exhibeat
     /// </summary>
     public class Game1 : HumbleGame
     {
+
+        private FPSDisplay fpsDisplay;
+
         public Game1()
         {
         }
 
         protected override void Initialize()
         {
+#if DEBUG
+            fpsDisplay = new FPSDisplay(Content.Load<SpriteFont>("plain"));
+#endif
 
             base.Initialize();
         }
@@ -33,7 +41,10 @@ namespace Exhibeat
         /// </summary>
         protected override void LoadContent()
         {
+            // Err mgmnt
+            this.screenManager.pushScreen(new MainMenuScreen(this));
 
+            base.LoadContent();
         }
 
         /// <summary>
@@ -43,6 +54,8 @@ namespace Exhibeat
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
+
+            base.UnloadContent();
         }
 
         /// <summary>
@@ -57,6 +70,9 @@ namespace Exhibeat
                 this.Exit();
 
             // TODO: Add your update logic here
+#if DEBUG
+            fpsDisplay.Update(gameTime);
+#endif
 
             base.Update(gameTime);
         }
@@ -67,9 +83,12 @@ namespace Exhibeat
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
+#if DEBUG
+            fpsDisplay.Draw(this.spriteBatch);
+#endif
 
             base.Draw(gameTime);
         }
