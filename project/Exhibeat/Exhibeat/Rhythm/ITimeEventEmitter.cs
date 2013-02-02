@@ -12,8 +12,8 @@ namespace Exhibeat.Rhythm
         /// </summary>
         /// <param name="rcv"></param>
         /// <returns></returns>
-        public bool RegisterNewReciever(ITimeEventReciever rcv, bool songEvents = true, bool userEvents = true);
-        public bool UnregisterReciever(ITimeEventReciever rcv);
-        public void ClearAllReceivers();
+        bool RegisterNewReciever(ITimeEventReciever rcv, bool songEvents = true, bool userEvents = true);
+        bool UnregisterReciever(ITimeEventReciever rcv);
+        void ClearAllReceivers();
     }
 }
