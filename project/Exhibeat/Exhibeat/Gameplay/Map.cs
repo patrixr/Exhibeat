@@ -68,10 +68,7 @@ public enum difficulty
             {
                 Console.WriteLine("{0} Exception caught.", e);
             }
-            if (result.Count > 0)
-                return result;
-            else
-                return null;
+            return result;
         }
         public void showClassData()
         {
