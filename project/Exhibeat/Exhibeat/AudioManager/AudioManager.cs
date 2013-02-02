@@ -11,7 +11,8 @@ namespace Exhibeat.AudioPlayer
     {
         private FMOD.System _lib;
         private List<ISong> _songList;
-        private int _index;
+        private List<int>   _toForget;
+        private int         _index;
 
         private void ErrorChecker(FMOD.RESULT res)
         {
@@ -25,6 +26,7 @@ namespace Exhibeat.AudioPlayer
             uint libVersion = 0;
             
             _songList = new List<ISong>();
+            _toForget = new List<int>();
             _index = 0;
             res = FMOD.Factory.System_Create(ref _lib);
             ErrorChecker(res);
@@ -39,13 +41,28 @@ namespace Exhibeat.AudioPlayer
         public void destroy()
         {
             _songList = null;
+            _toForget = null;
             _lib.release();
+        }
+
+        public void update()
+        {
+            _lib.update();
         }
 
         public int open(string path)
         {
             Song nSong = new Song(ref _lib, path);
+            int i;
 
+            for (i = 0; i < _songList.Count; i++)
+            {
+                if (_songList[i] == null)
+                {
+                    _songList[i] = nSong;
+                    return (i);
+                }
+            }
             _songList.Add(nSong);
             _index++;
             return (_index - 1);
@@ -62,9 +79,27 @@ namespace Exhibeat.AudioPlayer
             _songList[id].play();
         }
 
+        public void toForgetCallback()
+        {
+            int i;
+            for (i = 0; i < _toForget.Count; i++)
+            {
+                if (_songList[_toForget[i]].getLengthMs() == _songList[_toForget[i]].getLengthMs())
+                {
+                    close(_toForget[i]);
+                    _toForget.RemoveAt(i);
+                    break;
+                }
+            }
+        }
+
         public void playAndForget(int id)
         {
-            throw new NotImplementedException();
+            myCallback cbForget = new myCallback(toForgetCallback);
+
+            _toForget.Add(id);
+            _songList[id].setOnEndCallBack(cbForget);
+            _songList[id].play();
         }
 
         public void stop(int id)
@@ -110,6 +145,26 @@ namespace Exhibeat.AudioPlayer
         public bool isPlaying(int id)
         {
             return (_songList[id].isPlaying());
+        }
+
+        public void setOnStartCallBack(int index, myCallback startCall)
+        {
+            _songList[index].setOnStartCallBack(startCall);
+        }
+
+        public void setOnStopCallBack(int index, myCallback stopCall)
+        {
+            _songList[index].setOnStopCallBack(stopCall);
+        }
+
+        public void setOnEndCallBack(int index, myCallback endCall)
+        {
+            _songList[index].setOnEndCallBack(endCall);
+        }
+
+        public void setSyncpointCallBack(int index, uint ms, myCallback syncCall)
+        {
+            _songList[index].setSyncpointCallBack(ms, syncCall);
         }
     }
 }

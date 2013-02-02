@@ -3,21 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace AudioPlayer
+namespace Exhibeat.AudioPlayer
 {
     interface ISong
     {
-        public void     init(String path);
-        public void     destroy();
-        public void     play();
-        public void     stop();
-        public void     pause();
-        public uint     getCurrentPosMs();
-        public uint     getCurrentPosS();
-        public String   getTitle();
-        public uint     getLengthMs();
-        public uint     getLengthS();
-        public String   getArtist();
-        public bool     isPlaying();
+        void     init(String path);
+        void     destroy();
+        void     play();
+        void     stop();
+        void     pause();
+        uint     getCurrentPosMs();
+        uint     getCurrentPosS();
+        String   getTitle();
+        uint     getLengthMs();
+        uint     getLengthS();
+        String   getArtist();
+        bool     isPlaying();
+    
+        void setOnStartCallBack(myCallback startCall);
+        void setOnStopCallBack(myCallback startCall);
+        void setOnEndCallBack(myCallback startCall);
+        void setSyncpointCallBack(uint ms, myCallback syncCall);
     }
 }
