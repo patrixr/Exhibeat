@@ -70,6 +70,16 @@ public enum difficulty
             }
             return result;
         }
+        public List<Note> GetNotesBetweenOffsets(int offset1, int offset2)
+        {
+            List<Note> result = new List<Note>();
+            foreach (Note currentNote in _timeMap)
+            {
+                if (currentNote.Offset >= offset1 && currentNote.Offset <= offset2)
+                    result.Add(currentNote);
+            }
+            return result.Count > 0 ? result : null;
+        }
         public void showClassData()
         {
             string output = "";
