@@ -11,23 +11,35 @@ namespace Exhibeat.Parser
     {
         private List<Note> _timeMap;
         private Map _map;
-        public string[] labels = { "[SONG]", "[MAP]", "[NOTES]" };
+        public string[] _labels = { "[SONG]", "[MAP]", "[NOTES]" };
 
         public Map parse(string path)
         {
-            _timeMap = new List<Note>();
-            _map = new Map(_timeMap);
-            string buffer = System.Text.Encoding.UTF8.GetString(parser(path));
-            string[] spitedBuffer = buffer.Split('\n');
-   
-            spitedBuffer = cleanStringArray(spitedBuffer);
-            if (checkLabelExistence(spitedBuffer))
+            string buffer = null;
+
+            try
             {
-                foreach (string label in labels)
+                string[] spitedBuffer = null;
+                buffer = System.Text.Encoding.UTF8.GetString(parser(path));
+
+                _timeMap = new List<Note>();
+                _map = new Map(_timeMap);
+                spitedBuffer = buffer.Split('\n');
+                spitedBuffer = cleanStringArray(spitedBuffer);
+                if (checkLabelExistence(spitedBuffer))
                 {
-                    string output = getSongInfo(spitedBuffer, label);
-                    setSongInfo(label, output);
+                    foreach (string label in _labels)
+                    {
+                        string output = getSongInfo(spitedBuffer, label);
+                        setSongInfo(label, output);
+                    }
                 }
+            }
+            catch (IOException e)
+            {
+                Console.WriteLine("{0} Exception caught.", e);
+                throw e;
+
             }
             return _map;
         }
@@ -131,7 +143,7 @@ namespace Exhibeat.Parser
 
         private bool checkLabelExistence(string[] buffer)
         {
-            foreach (string label in labels)
+            foreach (string label in _labels)
             {
                 if (!buffer.Contains(label))
                     return false;
@@ -145,7 +157,7 @@ namespace Exhibeat.Parser
             string output = "";
 
             pos += 1;
-            while (pos < buffer.Length && !labels.Contains(buffer[pos]))
+            while (pos < buffer.Length && !_labels.Contains(buffer[pos]))
             {
                 if (label.CompareTo("[NOTES]") == 0)
                     buffer[pos] += "\n";
@@ -157,11 +169,12 @@ namespace Exhibeat.Parser
 
         public byte[] parser(String path)
         {
-            FileStream fileStream = new FileStream(path, FileMode.Open);
-            byte[] buffer;
+            FileStream fileStream = null;
+            byte[] buffer = null;
 
             try
             {
+                fileStream = new FileStream(path, FileMode.Open);
                 int length = (int)fileStream.Length;
                 buffer = new byte[length];
                 int count;
@@ -170,9 +183,14 @@ namespace Exhibeat.Parser
                 while ((count = fileStream.Read(buffer, sum, length - sum)) > 0)
                     sum += count;
             }
+            catch (IOException e)
+            {
+                throw e;
+            }
             finally
             {
-                fileStream.Close();
+                if (fileStream != null)
+                    fileStream.Close();
             }
             return buffer;
         }
