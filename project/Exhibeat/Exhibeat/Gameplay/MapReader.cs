@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Exhibeat.Parser;
+using Exhibeat.AudioPlayer;
+using Exhibeat.Rhythm;
+
 namespace Exhibeat.Gameplay
 {
     class MapReader
@@ -16,14 +19,13 @@ namespace Exhibeat.Gameplay
         protected bool notePlayed = false;
         protected int _line;
 
-        public MapReader(ITimeEventReceiver EventReceiver, string songPath)
+        public MapReader(ITimeEventReciever EventReceiver, string songPath)
         {
-            _eventEmitter = EventEmitter;
-            Parser parser = new Parser();
+            _eventReceiver = EventReceiver;
+            EXParser parser = new EXParser();
             _currentMap = parser.parse(songPath);
             _upcomingNotes = _currentMap.GetNotesFromIndex(0, 5);
             _line = 0;
-            Console.WriteLine("Nb Notes : " + _currentMap._timeMap.Count);
         }
 
         #region GAME OVERRIDE
@@ -64,7 +66,6 @@ namespace Exhibeat.Gameplay
 
         public void SendEvent(List<int> indexes)
         {
-            _eventReceiver.UserEvent(indexes, true);
         }
     }
 }

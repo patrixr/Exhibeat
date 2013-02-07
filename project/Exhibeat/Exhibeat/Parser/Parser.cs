@@ -7,7 +7,7 @@ using Exhibeat.Gameplay;
 
 namespace Exhibeat.Parser
 {
-    public class Parser
+    public class EXParser
     {
         private List<Note> _timeMap;
         private Map _map;
