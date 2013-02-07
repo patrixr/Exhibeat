@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Exhibeat.Gameplay
 {
-    class Note
+    public class Note
     {
         public int Offset { get; set; }
         public int Length { get; set; }

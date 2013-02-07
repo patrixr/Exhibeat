@@ -6,15 +6,15 @@ using System.Text;
 namespace Exhibeat.Gameplay
 {
 
-public enum difficulty
-{
-    EASY,
-    MEDIUM,
-    HARD,
-    INSANE
-}
+    public enum difficulty
+    {
+        EASY,
+        MEDIUM,
+        HARD,
+        INSANE
+    }
 
-    class Map
+    public class Map
     {
         // Section [NOTE] - note list
         private List<Note> _timeMap;
