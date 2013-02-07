@@ -37,10 +37,6 @@ namespace Exhibeat
         /// </summary>
         protected override void LoadContent()
         {
-            Exhibeat.Parser.Parser p = new Exhibeat.Parser.Parser();
-            Map map = p.parse("test_map2.txt");
-
-            map.showClassData();
         }
 
         /// <summary>
