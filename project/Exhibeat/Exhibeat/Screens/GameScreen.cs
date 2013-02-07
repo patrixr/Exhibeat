@@ -6,6 +6,7 @@ using Humble;
 using Humble.Screens;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Exhibeat.Components;
 
 namespace Exhibeat.Screens
 {
@@ -16,6 +17,8 @@ namespace Exhibeat.Screens
     /// </summary>
     class GameScreen : Screen
     {
+        private HexPad pad;
+
         public GameScreen(HumbleGame game)
             : base(game)
         {
@@ -23,11 +26,16 @@ namespace Exhibeat.Screens
 
         public override void Initialize()
         {
+            pad = new HexPad(Content, 0, 0);
+            pad.Initialize();
+
             base.Initialize();
         }
 
         public override void Update(GameTime gameTime)
         {
+            pad.Update(gameTime);
+
             base.Update(gameTime);
         }
 
@@ -43,6 +51,11 @@ namespace Exhibeat.Screens
 
         public override void Draw()
         {
+            SpriteBatch.Begin();
+            pad.Draw(SpriteBatch);
+            SpriteBatch.End();
+
+
             base.Draw();
         }
     }

@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Media;
 using Humble;
 using Humble.Components;
 using Exhibeat.Screens;
+using Exhibeat.Settings;
 
 namespace Exhibeat
 {
@@ -20,10 +21,16 @@ namespace Exhibeat
     public class Game1 : HumbleGame
     {
 
+
+#if DEBUG
         private FPSDisplay fpsDisplay;
+#endif
 
         public Game1()
         {
+            graphics.PreferredBackBufferHeight = ExhibeatSettings.WindowHeight;
+            graphics.PreferredBackBufferWidth = ExhibeatSettings.WindowWidth;
+            graphics.IsFullScreen = ExhibeatSettings.Fullscreen;
         }
 
         protected override void Initialize()
@@ -42,7 +49,7 @@ namespace Exhibeat
         protected override void LoadContent()
         {
             // Err mgmnt
-            this.screenManager.pushScreen(new MainMenuScreen(this));
+            this.screenManager.pushScreen(new GameScreen(this));
 
             base.LoadContent();
         }
