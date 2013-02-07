@@ -75,6 +75,14 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AudioManager\AudioManager.cs" />
+    <Compile Include="AudioManager\fmod.cs" />
+    <Compile Include="AudioManager\fmod_dsp.cs" />
+    <Compile Include="AudioManager\fmod_errors.cs" />
+    <Compile Include="AudioManager\fmod_memoryinfo.cs" />
+    <Compile Include="AudioManager\IAudioManager.cs" />
+    <Compile Include="AudioManager\ISong.cs" />
+    <Compile Include="AudioManager\Song.cs" />
     <Compile Include="Gameplay\Map.cs" />
     <Compile Include="Gameplay\MapReader.cs" />
     <Compile Include="Gameplay\Note.cs" />
@@ -92,6 +100,7 @@
     <Compile Include="Screens\SongSelectionScreen.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="AudioManager\fmodex.dll" />
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png">
       <XnaPlatformSpecific>true</XnaPlatformSpecific>
