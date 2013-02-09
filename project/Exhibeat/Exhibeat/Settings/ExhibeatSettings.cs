@@ -14,17 +14,18 @@ namespace Exhibeat.Settings
         public static int WindowWidth = 1280;
 
         public static Vector2[] TilePositions = {
-            new Vector2(0.5f, 0.23f),
-            new Vector2(1.5f, 0.23f),
-            new Vector2(0, 1),
-            new Vector2(1, 1),
-            new Vector2(2, 1),
-            new Vector2(0.5f, 1.77f),
-            new Vector2(1.5f, 1.77f)
+            new Vector2(0.5f, 0.0f),
+            new Vector2(1.5f, 0.0f),
+            new Vector2(0, 0.75f),
+            new Vector2(1, 0.75f),
+            new Vector2(2, 0.75f),
+            new Vector2(0.5f, 1.5f),
+            new Vector2(1.5f, 1.5f)
         };
 
         public static bool TileGrowth = true;
-        public static float TileGrowthStartScale = 0;
+        public static float TileGrowthStartScale = 1;
+        public static int TileGrowthDuration = 1000;
 
 #if ANIMATED_TILE
         public static String GrowthAnimationName = "tile_animation_test";

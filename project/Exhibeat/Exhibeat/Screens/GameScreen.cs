@@ -7,6 +7,7 @@ using Humble.Screens;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Exhibeat.Components;
+using Exhibeat.Settings;
 
 namespace Exhibeat.Screens
 {
@@ -26,8 +27,10 @@ namespace Exhibeat.Screens
 
         public override void Initialize()
         {
-            pad = new HexPad(Content, 0, 0);
+            pad = new HexPad(Content, ExhibeatSettings.WindowWidth / 2, ExhibeatSettings.WindowHeight / 2);
             pad.Initialize();
+            pad.CenteredOrigin = true;
+            pad.Scale = 1;
 
             base.Initialize();
         }
@@ -54,8 +57,6 @@ namespace Exhibeat.Screens
             SpriteBatch.Begin();
             pad.Draw(SpriteBatch);
             SpriteBatch.End();
-
-
             base.Draw();
         }
     }

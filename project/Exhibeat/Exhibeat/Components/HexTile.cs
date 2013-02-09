@@ -51,14 +51,11 @@ namespace Exhibeat.Components
             }
         }
 
-        enum State
-        {
-            Normal,
-            Growing
-        }
-        
-        public bool CenteredOrigin = true;
+        public bool CenteredOrigin = false;
         public float Scale = 1;
+
+        public int NoteCount { get { return notes.Count; } }
+
         private ContentManager content;
         private Texture2D texture_base;
 
@@ -120,7 +117,6 @@ namespace Exhibeat.Components
             foreach (VisualNote note in notes)
             {
 #if ANIMATED_TILE
-               // spriteBatch.Draw(texture_move, position, null, note.color, 0, note_origin, note.current_scale * Scale, SpriteEffects.None, 0);
                 spriteBatch.Draw(texture_move, position, note.sprite_sheet.GetBlitArea(), note.color, 0, note_origin,
                     note.current_scale, SpriteEffects.None, 0);
 #else
@@ -131,10 +127,6 @@ namespace Exhibeat.Components
 
         public override void Update(GameTime gameTime)
         {
-            if (notes.Count == 0)
-            {
-                NewNote(1750);
-            }
             for (int i = 0; i < notes.Count; i++)
             {
                 VisualNote note = notes[i];
@@ -144,8 +136,10 @@ namespace Exhibeat.Components
                     notes.Remove(note);
                     i--;
                 }
+#if ANIMATED_TILE
                 else
                     note.sprite_sheet.Update(gameTime);
+#endif
             }
         }
 
