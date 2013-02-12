@@ -7,10 +7,9 @@ namespace Exhibeat.Rhythm
 {
     public enum userEvent
     {
-        NOTEVERYGOOD,
-        NOTEGOOD,
-        NOTENORMAL,
-        NOTEBAD,
+        NOTEEXCELLENT,
+        NOTEPERFECT,
+        NOTEGREAT,
         NOTEFAIL
     };
 }
