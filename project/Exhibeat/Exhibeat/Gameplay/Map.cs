@@ -52,23 +52,14 @@ namespace Exhibeat.Gameplay
         public List<Note> GetNotesFromIndex(int index, int nb)
         {
             List<Note> result = new List<Note>();
-
-            try
+            if (index < _timeMap.Count)
             {
-                while (nb > 0)
+                for (int idx = index; idx < index + nb && idx < _timeMap.Count; idx++)
                 {
-                    if (index == _timeMap.Count - 1)
-                        nb = 1;
-                    else
-                        result.Add(_timeMap[index]);
-                    nb--;
+                    result.Add(_timeMap[idx]);
                 }
             }
-            catch (Exception e)
-            {
-                Console.WriteLine("{0} Exception caught.", e);
-            }
-            return result;
+            return result.Count > 0 ? result : null;
         }
         public List<Note> GetNotesBetweenOffsets(int offset1, int offset2)
         {

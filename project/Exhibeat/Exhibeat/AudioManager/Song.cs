@@ -8,7 +8,7 @@ namespace Exhibeat.AudioPlayer
 {
     using FMOD;
 
-    class Song : ISong
+    public class Song : ISong
     {
         private FMOD.System     _lib;
         private FMOD.Sound      _song;

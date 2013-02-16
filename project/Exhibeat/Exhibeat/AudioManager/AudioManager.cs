@@ -7,7 +7,7 @@ namespace Exhibeat.AudioPlayer
 {
     using FMOD;
 
-    class AudioManager : IAudioManager
+    public class AudioManager : IAudioManager
     {
         private FMOD.System _lib;
         private List<ISong> _songList;

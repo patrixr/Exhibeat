@@ -23,6 +23,7 @@ namespace Exhibeat
     /// </summary>
     public class Game1 : HumbleGame
     {
+        MapReader mapReader = new MapReader();
 
         private FPSDisplay fpsDisplay;
 
@@ -46,8 +47,8 @@ namespace Exhibeat
         protected override void LoadContent()
         {
             // Err mgmnt
-            this.screenManager.pushScreen(new MainMenuScreen(this));
 
+            this.screenManager.pushScreen(new MainMenuScreen(this));
             base.LoadContent();
         }
 
@@ -69,6 +70,7 @@ namespace Exhibeat
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            mapReader.Update(gameTime);
             // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();

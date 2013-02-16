@@ -7,7 +7,7 @@ namespace Exhibeat.AudioPlayer
 {
     public delegate void myCallback();
 
-    interface IAudioManager
+    public interface IAudioManager
     {
         void     init();
         void     destroy();
