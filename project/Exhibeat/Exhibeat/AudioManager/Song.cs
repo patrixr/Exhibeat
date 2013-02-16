@@ -50,6 +50,7 @@ namespace Exhibeat.AudioPlayer
         {
             if (type == FMOD.CHANNEL_CALLBACKTYPE.END)
             {
+                stop();
                 if (_endCall != null)
                     _endCall();
             }
