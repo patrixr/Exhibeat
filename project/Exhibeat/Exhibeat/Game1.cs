@@ -13,6 +13,10 @@ using Humble.Components;
 using Exhibeat.Screens;
 using Exhibeat.Settings;
 
+// ADD
+using Exhibeat.Gameplay;
+using Exhibeat.Parser;
+
 namespace Exhibeat
 {
     /// <summary>
@@ -20,8 +24,6 @@ namespace Exhibeat
     /// </summary>
     public class Game1 : HumbleGame
     {
-
-
 #if DEBUG
         private FPSDisplay fpsDisplay;
 #endif
@@ -31,6 +33,8 @@ namespace Exhibeat
             graphics.PreferredBackBufferHeight = ExhibeatSettings.WindowHeight;
             graphics.PreferredBackBufferWidth = ExhibeatSettings.WindowWidth;
             graphics.IsFullScreen = ExhibeatSettings.Fullscreen;
+            graphics.SynchronizeWithVerticalRetrace = false;
+            IsFixedTimeStep = false;
         }
 
         protected override void Initialize()
@@ -80,6 +84,7 @@ namespace Exhibeat
 #if DEBUG
             fpsDisplay.Update(gameTime);
 #endif
+           ExhibeatSettings.GetAudioManager().update();
 
             base.Update(gameTime);
         }

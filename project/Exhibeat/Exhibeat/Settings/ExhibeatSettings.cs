@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Exhibeat.AudioPlayer;
 
 namespace Exhibeat.Settings
 {
@@ -24,11 +25,36 @@ namespace Exhibeat.Settings
         };
 
         public static bool TileGrowth = true;
-        public static float TileGrowthStartScale = 1;
-        public static int TileGrowthDuration = 1000;
+        public static float TileGrowthStartScale = 0;
+        public static int TileGrowthDuration = 700;
+
+        public static int TimeElapsed { get; set; }
+
+        public static string ResourceFolder = "C:\\Users\\Patrick Rabier\\Desktop\\test\\";
+
+        private static IAudioManager audioManager = null;
+        public static IAudioManager GetAudioManager()
+        {
+            if (audioManager == null)
+            {
+                audioManager = new AudioManager();
+                audioManager.init();
+            }
+            return audioManager;
+        }
+
+        public static void CloseAudioManager()
+        {
+            if (audioManager != null)
+                audioManager.destroy();
+        }
+
 
 #if ANIMATED_TILE
         public static String GrowthAnimationName = "tile_animation_test";
 #endif
+
+    
+    
     }
 }

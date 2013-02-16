@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Exhibeat.Components;
 using Exhibeat.Settings;
+using Exhibeat.Gameplay;
 
 namespace Exhibeat.Screens
 {
@@ -19,6 +20,8 @@ namespace Exhibeat.Screens
     class GameScreen : Screen
     {
         private HexPad pad;
+
+        private MapReader mapReader;
 
         public GameScreen(HumbleGame game)
             : base(game)
@@ -32,12 +35,20 @@ namespace Exhibeat.Screens
             pad.CenteredOrigin = true;
             pad.Scale = 1;
 
+            mapReader = new MapReader();
+            mapReader.Initialize(Content);
+            mapReader.RegisterNewReciever(pad);
+
+            mapReader.Read("test.exi");
+            mapReader.Play();
+
             base.Initialize();
         }
 
         public override void Update(GameTime gameTime)
         {
             pad.Update(gameTime);
+            mapReader.Update(gameTime);
 
             base.Update(gameTime);
         }

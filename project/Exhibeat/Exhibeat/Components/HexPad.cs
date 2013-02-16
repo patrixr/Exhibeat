@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Exhibeat.Settings;
 using Exhibeat.Rhythm;
+using Exhibeat.Gameplay;
 
 namespace Exhibeat.Components
 {
@@ -156,15 +157,16 @@ namespace Exhibeat.Components
         #endregion
 
         #region TIMERECEIVER IMPLEMENTATION
-        public void NewSongEvent(songEvent ev, int param)
+        public void NewSongEvent(songEvent ev, Object param)
         {
             if (ev == songEvent.NEWNOTE)
             {
-                tiles[param].NewNote(ExhibeatSettings.TileGrowthDuration);
+                NoteEventParameter p = (NoteEventParameter)param;
+                tiles[p.note].NewNote(p.delayms);
             }
         }
 
-        public void NewUserEvent(userEvent ev, int param)
+        public void NewUserEvent(userEvent ev, Object param)
         {
             throw new NotImplementedException();
         }

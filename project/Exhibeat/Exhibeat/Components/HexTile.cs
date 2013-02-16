@@ -51,6 +51,8 @@ namespace Exhibeat.Components
             }
         }
 
+        private int clapSongIdx;
+        
         public bool CenteredOrigin = false;
         public float Scale = 1;
 
@@ -104,6 +106,8 @@ namespace Exhibeat.Components
 #endif
             note_origin = new Vector2(texture_base.Width / 2, texture_base.Height / 2);
             notes = new List<VisualNote>();
+
+            clapSongIdx = ExhibeatSettings.GetAudioManager().open(ExhibeatSettings.ResourceFolder + "taiko-normal-hitclap.wav");
         }
 
         public override void Initialize()
@@ -130,10 +134,12 @@ namespace Exhibeat.Components
             for (int i = 0; i < notes.Count; i++)
             {
                 VisualNote note = notes[i];
-                note.Update(gameTime.ElapsedGameTime.Milliseconds);
+                note.Update(ExhibeatSettings.TimeElapsed /*gameTime.ElapsedGameTime.Milliseconds*/);
                 if (note.time_left < 0)
                 {
                     notes.Remove(note);
+                    ExhibeatSettings.GetAudioManager().stop(clapSongIdx);
+                    ExhibeatSettings.GetAudioManager().play(clapSongIdx);
                     i--;
                 }
 #if ANIMATED_TILE
