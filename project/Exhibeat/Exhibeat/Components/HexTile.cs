@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Exhibeat.Settings;
+using Exhibeat.Shaders;
 
 namespace Exhibeat.Components
 {
@@ -48,24 +49,40 @@ namespace Exhibeat.Components
                 tmp = (1 - (float)current_scale / (start_scale + 1)) * 200f;
                 col = (byte)tmp;
                 color.R = col;
+
             }
         }
 
         private int clapSongIdx;
-        
+
+        public float glowOpacity = 0f;
+        public float glowTargetOpacity = 0f;
+
         public bool CenteredOrigin = false;
-        public float Scale = 1;
+        private float Scale = 1;
+
+        public float TileScale
+        {
+            get { return Scale; }
+            set { Scale = value; }
+        }
 
         public int NoteCount { get { return notes.Count; } }
 
         private ContentManager content;
         private Texture2D texture_base;
 
+        BlurEffect      blurEffect;
+
 #if ANIMATED_TILE
         private SpriteSheet spritesheet;
 #endif
         private Texture2D texture_move;
-        
+
+        private Texture2D texture_press;
+        private Vector2 press_origin;
+        private bool pressAnimation = false;
+
         private List<VisualNote> notes;
         private Vector2 note_origin;
 
@@ -98,6 +115,7 @@ namespace Exhibeat.Components
             position = new Vector2(X, Y);
             content = contentmanager;
             texture_base = content.Load<Texture2D>("hexagon_base");
+            texture_press = content.Load<Texture2D>("hexagon_press");
 #if ANIMATED_TILE
             texture_move = content.Load<Texture2D>(ExhibeatSettings.GrowthAnimationName);
             spritesheet = content.Load<SpriteSheet>(ExhibeatSettings.GrowthAnimationName + "_sheet");
@@ -105,9 +123,11 @@ namespace Exhibeat.Components
             texture_move = content.Load<Texture2D>("hexagon_empty");
 #endif
             note_origin = new Vector2(texture_base.Width / 2, texture_base.Height / 2);
+            press_origin = new Vector2(texture_press.Width / 2, texture_press.Height / 2);
             notes = new List<VisualNote>();
 
             clapSongIdx = ExhibeatSettings.GetAudioManager().open(ExhibeatSettings.ResourceFolder + "taiko-normal-hitclap.wav");
+            blurEffect = null;
         }
 
         public override void Initialize()
@@ -116,7 +136,17 @@ namespace Exhibeat.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture_base, position, null, Color.White, 0, note_origin, Scale, SpriteEffects.None, 0);
+           /*if (blurEffect == null)
+                blurEffect = new BlurEffect(spriteBatch.GraphicsDevice, content);
+            spriteBatch.End();
+            blurEffect.start();
+            spriteBatch.Begin();*/
+            
+             if (glowOpacity > 0f)
+                spriteBatch.Draw(texture_press, position, null, Color.Orange * glowOpacity, 0, press_origin, Scale, SpriteEffects.None, 0);
+
+             spriteBatch.Draw(texture_base, position, null, Color.White, 0, note_origin, Scale, SpriteEffects.None, 0);
+          
 
             foreach (VisualNote note in notes)
             {
@@ -127,6 +157,10 @@ namespace Exhibeat.Components
                 spriteBatch.Draw(texture_move, position, null, note.color, 0, note_origin, note.current_scale * Scale, SpriteEffects.None, 0);
 #endif
             }
+
+          /* spriteBatch.End();
+            blurEffect.applyEffect(spriteBatch);
+            spriteBatch.Begin();*/
         }
 
         public override void Update(GameTime gameTime)
@@ -140,6 +174,7 @@ namespace Exhibeat.Components
                     notes.Remove(note);
                     ExhibeatSettings.GetAudioManager().stop(clapSongIdx);
                     ExhibeatSettings.GetAudioManager().play(clapSongIdx);
+                    Press();
                     i--;
                 }
 #if ANIMATED_TILE
@@ -147,6 +182,34 @@ namespace Exhibeat.Components
                     note.sprite_sheet.Update(gameTime);
 #endif
             }
+
+            if (pressAnimation)
+            {
+                if (glowTargetOpacity > 0f) // apparition
+                {
+                    if (glowOpacity >= 0.7f)
+                        glowTargetOpacity = 0f;
+                    else
+                        glowOpacity += 0.05f;
+                }
+                else // disparition
+                {
+                    if (glowOpacity > 0f)
+                        glowOpacity -= 0.01f;
+                    else
+                    {
+                        glowOpacity = 0f;
+                        pressAnimation = false;
+                    }
+
+                }
+            }
+        }
+
+        public void Press()
+        {
+            pressAnimation = true;
+            glowTargetOpacity = 1f;
         }
 
         public void NewNote(int duration)

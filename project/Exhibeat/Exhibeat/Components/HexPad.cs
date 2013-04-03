@@ -29,7 +29,7 @@ namespace Exhibeat.Components
             {
                 scale = value;
                 foreach (HexTile t in tiles)
-                    t.Scale = value;
+                    t.TileScale = value;
                 UpdateTilePositions();
             }
         }

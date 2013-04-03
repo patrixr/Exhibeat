@@ -20,12 +20,14 @@ namespace Exhibeat.Screens
     class GameScreen : Screen
     {
         private HexPad pad;
+        private Visualizer visualizer;
 
         private MapReader mapReader;
 
         public GameScreen(HumbleGame game)
             : base(game)
         {
+
         }
 
         public override void Initialize()
@@ -42,11 +44,16 @@ namespace Exhibeat.Screens
             mapReader.Read("test.exi");
             mapReader.Play();
 
+            //visualizer = new Visualizer(Content, 500, 0, 300, 100, 100);
+            visualizer = new Visualizer(Content, 0, 0, 0, ExhibeatSettings.WindowHeight / 4, 30);
+            mapReader.RegisterNewReciever(visualizer);
+
             base.Initialize();
         }
 
         public override void Update(GameTime gameTime)
         {
+            visualizer.Update(gameTime);
             pad.Update(gameTime);
             mapReader.Update(gameTime);
 
@@ -66,7 +73,11 @@ namespace Exhibeat.Screens
         public override void Draw()
         {
             SpriteBatch.Begin();
+
+            visualizer.Draw(SpriteBatch);
             pad.Draw(SpriteBatch);
+          
+            
             SpriteBatch.End();
             base.Draw();
         }

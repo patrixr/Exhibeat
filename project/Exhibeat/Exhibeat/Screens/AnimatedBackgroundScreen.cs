@@ -6,6 +6,7 @@ using Humble;
 using Humble.Screens;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Exhibeat.Rhythm;
 
 namespace Exhibeat.Screens
 {
@@ -13,7 +14,7 @@ namespace Exhibeat.Screens
     /// Sera cree en dessous d'un autre screen pour gerer le background
     /// Ceci est optionnel, il a ete cree en tant que squelette pour la creation du jeu
     /// </summary>
-    class AnimatedBackgroundScreen : Screen
+    class AnimatedBackgroundScreen : Screen, ITimeEventReciever
     {
         public AnimatedBackgroundScreen(HumbleGame game)
             : base(game)
@@ -43,6 +44,16 @@ namespace Exhibeat.Screens
         public override void Draw()
         {
             base.Draw();
+        }
+
+        public void NewSongEvent(songEvent ev, object param)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void NewUserEvent(userEvent ev, object param)
+        {
+            throw new NotImplementedException();
         }
     }
 }
