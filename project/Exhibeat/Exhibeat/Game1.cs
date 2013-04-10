@@ -97,12 +97,12 @@ namespace Exhibeat
         {
             GraphicsDevice.Clear(Color.Black);
 
-            // TODO: Add your drawing code here
+
+            base.Draw(gameTime);
+            
 #if DEBUG
             fpsDisplay.Draw(this.spriteBatch);
 #endif
-
-            base.Draw(gameTime);
         }
     }
 }

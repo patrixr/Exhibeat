@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using Humble;
 using Humble.Screens;
+using Humble.Components;
+using Humble.Animations;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Exhibeat.Components;
@@ -21,6 +23,7 @@ namespace Exhibeat.Screens
     {
         private HexPad pad;
         private Visualizer visualizer;
+        //private AnimatedSprite runner;
 
         private MapReader mapReader;
 
@@ -44,9 +47,12 @@ namespace Exhibeat.Screens
             mapReader.Read("test.exi");
             mapReader.Play();
 
-            //visualizer = new Visualizer(Content, 500, 0, 300, 100, 100);
+            //visualizer = new Visualizer(Content, 500, 0, 800, 100, 100);
             visualizer = new Visualizer(Content, 0, 0, 0, ExhibeatSettings.WindowHeight / 4, 30);
             mapReader.RegisterNewReciever(visualizer);
+
+            //runner = new AnimatedSprite(Content.Load<Texture2D>("running-test"), Content.Load<SpriteSheet>("running-test-sheet"), new Vector2(100, 100), false);
+            //runner.Position = new Vector2(0, 0/* ExhibeatSettings.WindowHeight - Content.Load<Texture2D>("running-test").Height / 2*/);
 
             base.Initialize();
         }
@@ -56,6 +62,12 @@ namespace Exhibeat.Screens
             visualizer.Update(gameTime);
             pad.Update(gameTime);
             mapReader.Update(gameTime);
+            //runner.Update(gameTime);
+
+            /*Vector2 p = runner.Position;
+            if (p.X < 300)
+                p.X += 1;
+            runner.Position = p;*/
 
             base.Update(gameTime);
         }
@@ -74,10 +86,12 @@ namespace Exhibeat.Screens
         {
             SpriteBatch.Begin();
 
+
             visualizer.Draw(SpriteBatch);
             pad.Draw(SpriteBatch);
-          
-            
+
+            //runner.Draw(SpriteBatch);
+
             SpriteBatch.End();
             base.Draw();
         }

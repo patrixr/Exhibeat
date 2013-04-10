@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<XnaContent>
+  <!--
+  Defines a spritesheet used to animate an AnimatedSprite
+  It may be used independantly
+  texture defines the name of the image file used to load the texture
+  Its content should be adapted to the following spritesheet definition
+  -->
+  <Asset Type="Humble.Animations.SpriteSheet">
+
+    <!--
+  
+    A complete spritesheet is composed of :
+    
+    a <texturename> field, which references the name of the texture used for this animation
+    a list of animation states <states>. Each state corresponds to a line of the sprite sheet, and must be
+    added in the correct order
+  
+    Every sprite sheet must have at least the following state : normal
+    Normal is the basic animation, running most of the time
+  
+    Each state has the following fields : (they must be written in that order for the xml import to work)
+      
+      (MANDATORY)
+      
+      name (string) used to reference the state in question
+      switchdelay (int) defines in milliseconds the timeout between each frame change
+      width (px) defines the width of the frames
+      height (px) defines the width of the frames
+      nextstate (string) defines the name of the state following the current
+      framecount (int) defines the number of frames the state is composed of
+  
+  
+      The following fiels are used as an example.
+  
+  -->
+
+    <texturename>tile_animation_test</texturename>
+
+    <states>
+      <!--
+        Since states corresponds to a list in code, the keyword Item is used to specify the states present in that list
+      -->
+      <Item>
+        <name>normal</name>
+        <switchdelay>50</switchdelay>
+        <width>110</width>
+        <height>128</height>
+        <nextstate>normal</nextstate>
+        <framecount>15</framecount>
+      </Item>
+    </states>
+  </Asset>
+</XnaContent>

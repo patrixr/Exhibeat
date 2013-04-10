@@ -25,7 +25,7 @@ namespace Exhibeat.Settings
         };
 
         public static bool TileGrowth = true;
-        public static float TileGrowthStartScale = 0;
+        public static float TileGrowthStartScale = 1;
         public static int TileGrowthDuration = 700;
 
         public static int TimeElapsed { get; set; }
