@@ -23,6 +23,7 @@ namespace Exhibeat.Screens
     {
         private HexPad pad;
         private Visualizer visualizer;
+        private LifeBar lifebar;
         //private AnimatedSprite runner;
 
         private MapReader mapReader;
@@ -39,6 +40,8 @@ namespace Exhibeat.Screens
             pad.Initialize();
             pad.CenteredOrigin = true;
             pad.Scale = 1;
+
+            lifebar = new LifeBar(Content,30,30);
 
             mapReader = new MapReader();
             mapReader.Initialize(Content);
@@ -62,6 +65,7 @@ namespace Exhibeat.Screens
             visualizer.Update(gameTime);
             pad.Update(gameTime);
             mapReader.Update(gameTime);
+            lifebar.Update(gameTime);
             //runner.Update(gameTime);
 
             /*Vector2 p = runner.Position;
@@ -89,6 +93,7 @@ namespace Exhibeat.Screens
 
             visualizer.Draw(SpriteBatch);
             pad.Draw(SpriteBatch);
+            lifebar.Draw(SpriteBatch);
 
             //runner.Draw(SpriteBatch);
 
