@@ -74,11 +74,10 @@ namespace Exhibeat.Gameplay
 
         public bool Read(string songFilePath)
         {
-<<<<<<< HEAD
             _currentMap  = _parser.parse(ExhibeatSettings.ResourceFolder + songFilePath);
-=======
-            _currentMap = _parser.parse(songFilePath);
->>>>>>> origin/marti_p/gameplay
+
+            //_currentMap = _parser.parse(songFilePath);
+
             if (_currentMap == null)
                 return false;
             _songIndex = _audioManager.open(ExhibeatSettings.ResourceFolder + _currentMap.Path);
@@ -130,28 +129,11 @@ namespace Exhibeat.Gameplay
             if (_songPlaying && _upcomingNotes != null)
             {
                 int tmp = (int)_audioManager.getCurrentPosMs(_songIndex);
-<<<<<<< HEAD
-                _timeElapsed =  tmp - _currentPos;
-                Console.WriteLine(_timeElapsed);
-                _currentPos = tmp;
-                ExhibeatSettings.TimeElapsed = _timeElapsed;
-
-                foreach (Note note in _upcomingNotes)
-                {
-                    
-                    int delay = note.Offset - _currentPos;
-                    if (delay <= ExhibeatSettings.TileGrowthDuration)
-                    {
-                        SendEvent(songEvent.NEWNOTE, new NoteEventParameter() { note = note.Length, delayms = delay });
-                        Console.WriteLine("playing button " + note.Length + " at " + note.Offset + " with a delay of " + delay);
-                        
-=======
                 _timeElapsed = tmp - _currentPos;
                 _currentPos = tmp;
                 ExhibeatSettings.TimeElapsed = _timeElapsed;
 
                 handleUserInput();
-
                 foreach (Note note in _upcomingNotes)
                 {
                     int delay;
@@ -160,7 +142,7 @@ namespace Exhibeat.Gameplay
                     {
                         SendEvent(songEvent.NEWNOTE, new NoteEventParameter() { note = note.Button, delayms = delay });
                         Console.WriteLine("playing button " + note.Length + " at " + note.Offset + " with a delay of " + delay);
->>>>>>> origin/marti_p/gameplay
+
                         _line++;
                     }
                 }

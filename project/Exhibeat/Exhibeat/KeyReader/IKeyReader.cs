@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ExhiBeat.KeyReader
 {
-    interface IKeyReader
+    public interface IKeyReader
     {
         Key getNextKeyEvent();
     }

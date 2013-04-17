@@ -12,7 +12,7 @@ namespace ExhiBeat.KeyReader
         none
     };
 
-    class Key
+    public class Key
     {
         public int pos;
         public keyType type;

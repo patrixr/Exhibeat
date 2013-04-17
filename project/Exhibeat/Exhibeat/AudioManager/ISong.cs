@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Exhibeat.AudioPlayer
 {
-    public interface ISong
+    interface ISong
     {
         void     init(String path);
         void     destroy();

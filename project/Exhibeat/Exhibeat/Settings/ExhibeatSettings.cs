@@ -33,6 +33,7 @@ namespace Exhibeat.Settings
         public static string ResourceFolder = "C:\\Users\\julie_000\\Desktop\\test\\";
 
         private static IAudioManager audioManager = null;
+
         public static IAudioManager GetAudioManager()
         {
             if (audioManager == null)

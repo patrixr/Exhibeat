@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace ExhiBeat.KeyReader
 {
-    class KeyReader : IKeyReader
+    public class KeyReader : IKeyReader
     {
         private bool[]      _curState;
         private List<Key>  _keyEvents;
