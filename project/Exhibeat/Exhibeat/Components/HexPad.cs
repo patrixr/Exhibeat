@@ -165,10 +165,20 @@ namespace Exhibeat.Components
                 tiles[p.note].NewNote(p.delayms);
             }
         }
-
         public void NewUserEvent(userEvent ev, Object param)
         {
-            throw new NotImplementedException();
+            if (ev == userEvent.NOTEPRESSED)
+            {
+                NoteEventParameter p = (NoteEventParameter)param;
+                tiles[p.note].Press();
+            }
+            else if (ev == userEvent.NOTERELEASED)
+            {
+                //NoteEventParameter p = (NoteEventParameter)param;
+                //tiles[p.note].NoteReleased();
+            }
+            else
+                throw new NotImplementedException();
         }
         #endregion
     }
