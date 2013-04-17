@@ -92,6 +92,9 @@
     <Compile Include="Gameplay\Note.cs" />
     <Compile Include="Gameplay\NoteEventParameter.cs" />
     <Compile Include="Parser\Parser.cs" />
+    <Compile Include="KeyReader\IKeyReader.cs" />
+    <Compile Include="KeyReader\Key.cs" />
+    <Compile Include="KeyReader\KeyReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />
