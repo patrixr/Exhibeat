@@ -33,11 +33,6 @@ namespace Exhibeat.AudioPlayer
             Bass.BASS_Free();
         }
 
-        public void update()
-        {
-          //  _lib.update();
-        }
-
         public int open(string path)
         {
             Song nSong = new Song(path);
@@ -68,26 +63,27 @@ namespace Exhibeat.AudioPlayer
         }
 
         public void toForgetCallback()
-        {/*
+        {
             int i;
+
             for (i = 0; i < _toForget.Count; i++)
             {
-                if (_songList[_toForget[i]].getLengthMs() == _songList[_toForget[i]].getLengthMs())
+                if (_songList[_toForget[i]].hasBeenPlayedOnce() == true)
                 {
                     close(_toForget[i]);
                     _toForget.RemoveAt(i);
                     break;
                 }
-            }*/
+            }
         }
 
         public void playAndForget(int id)
-        {/*
+        {
             myCallback cbForget = new myCallback(toForgetCallback);
 
             _toForget.Add(id);
             _songList[id].setOnEndCallBack(cbForget);
-            _songList[id].play();*/
+            _songList[id].play();
         }
 
         public void stop(int id)
@@ -137,22 +133,22 @@ namespace Exhibeat.AudioPlayer
 
         public void setOnStartCallBack(int index, myCallback startCall)
         {
-        //    _songList[index].setOnStartCallBack(startCall);
+            _songList[index].setOnStartCallBack(startCall);
         }
 
         public void setOnStopCallBack(int index, myCallback stopCall)
         {
-          //  _songList[index].setOnStopCallBack(stopCall);
+            _songList[index].setOnStopCallBack(stopCall);
         }
 
         public void setOnEndCallBack(int index, myCallback endCall)
         {
-            //_songList[index].setOnEndCallBack(endCall);
+            _songList[index].setOnEndCallBack(endCall);
         }
 
         public void setSyncpointCallBack(int index, uint ms, myCallback syncCall)
         {
-           // _songList[index].setSyncpointCallBack(ms, syncCall);
+            _songList[index].setSyncpointCallBack(ms, syncCall);
         }
 
         public void increaseChannelVolume(int id)

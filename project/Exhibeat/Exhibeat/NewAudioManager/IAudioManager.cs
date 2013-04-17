@@ -24,7 +24,6 @@ namespace Exhibeat.AudioPlayer
         uint     getLengthS(int id);
         String   getArtist(int id);
         bool     isPlaying(int id);
-        void     update();
         void     increaseChannelVolume(int id);
         void     decreaseChannelVolume(int id);
         void     setChannelVolume(int id, float volume);

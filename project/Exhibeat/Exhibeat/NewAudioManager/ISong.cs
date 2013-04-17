@@ -19,6 +19,7 @@ namespace Exhibeat.AudioPlayer
         uint     getLengthS();
         String   getArtist();
         bool     isPlaying();
+        bool     hasBeenPlayedOnce();
         void     increaseVolume();
         void     decreaseVolume();
         void     setVolume(float volume);

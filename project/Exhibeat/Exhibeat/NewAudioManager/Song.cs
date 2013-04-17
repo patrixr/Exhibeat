@@ -13,12 +13,15 @@ namespace Exhibeat.AudioPlayer
         private String          _path;
         private bool            _isPlaying;
         private bool            _isPaused;
+        private bool            _hasBeenPlayedOnce;
         private float           _volume;
         private myCallback      _startCall;
         private myCallback      _stopCall;
         private myCallback      _endCall;
         private myCallback      _syncCall;
         private IntPtr          _ptr;
+        private SYNCPROC        _endSync;
+        private SYNCPROC        _pointSync;
 
         public Song()
         {
@@ -39,6 +42,9 @@ namespace Exhibeat.AudioPlayer
             _path = path;
             _isPlaying = false;
             _isPaused = false;
+            _hasBeenPlayedOnce = true;
+            _endSync = new SYNCPROC(EndSync);
+            _pointSync = new SYNCPROC(PointSync);
             _volume = 0.2f;
             if (path != null)
                 _channel = Bass.BASS_StreamCreateFile(path, 0, 0, BASSFlag.BASS_DEFAULT);
@@ -91,14 +97,17 @@ namespace Exhibeat.AudioPlayer
 
         public void play()
         {
-           // if (_startCall != null)
-           //     _startCall();
             if (_channel != 0)
             {
+                
                 if (_isPaused == true)
                     Bass.BASS_ChannelPlay(_channel, false);
                 else
+                {
+                    if (_startCall != null)
+                        _startCall();
                     Bass.BASS_ChannelPlay(_channel, true);
+                }
                 _isPlaying = true;
                 _isPaused = false;
             }
@@ -111,6 +120,7 @@ namespace Exhibeat.AudioPlayer
                 Bass.BASS_ChannelStop(_channel);
                 _isPlaying = false;
                 _isPaused = false;
+                _stopCall();
             }
         }
 
@@ -181,25 +191,42 @@ namespace Exhibeat.AudioPlayer
             return (_isPlaying);
         }
 
+        public bool hasBeenPlayedOnce()
+        {
+            return (_hasBeenPlayedOnce);
+        }
+
         public void setOnStartCallBack(myCallback startCall)
         {
-          //  _startCall = startCall;
+          _startCall = startCall;
         }
 
         public void setOnStopCallBack(myCallback stopCall)
         {
-          // _stopCall = stopCall;
+          _stopCall = stopCall;
+        }
+
+        private void EndSync(int handle, int channel, int data, IntPtr user)
+        {
+            _hasBeenPlayedOnce = true;
+            _endCall();
+        }
+
+        private void PointSync(int handle, int channel, int data, IntPtr user)
+        {
+            _syncCall();
         }
 
         public void setOnEndCallBack(myCallback endCall)
         {
-           // _endCall = endCall;
+            _endCall = endCall;
+            Bass.BASS_ChannelSetSync(_channel, BASSSync.BASS_SYNC_END, 0, _endSync, IntPtr.Zero);
         }
 
         public void setSyncpointCallBack(uint ms, myCallback syncCall)
         {
-          //  _song.addSyncPoint(ms, TIMEUNIT.MS, "EndSong", ref _ptr);
-          //  _syncCall = syncCall;
+            _syncCall = syncCall;
+            Bass.BASS_ChannelSetSync(_channel, BASSSync.BASS_SYNC_POS, Bass.BASS_ChannelSeconds2Bytes(_channel, ms / 1000), _pointSync, IntPtr.Zero); 
         }
     }
 }
