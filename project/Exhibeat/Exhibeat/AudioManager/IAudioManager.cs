@@ -25,6 +25,10 @@ namespace Exhibeat.AudioPlayer
         String   getArtist(int id);
         bool     isPlaying(int id);
         void     update();
+        void     increaseVolume(int id);
+        void     decreaseVolume(int id);
+        void     setVolume(int id, float volume);
+        float    getVolume(int id);
 
         void setOnStartCallBack(int index, myCallback startCall);
         void setOnStopCallBack(int index, myCallback stopCall);

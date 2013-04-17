@@ -166,5 +166,25 @@ namespace Exhibeat.AudioPlayer
         {
             _songList[index].setSyncpointCallBack(ms, syncCall);
         }
+
+        public void increaseVolume(int id)
+        {
+            _songList[id].increaseVolume();
+        }
+
+        public void decreaseVolume(int id)
+        {
+            _songList[id].decreaseVolume();
+        }
+
+        public void setVolume(int id, float volume)
+        {
+            _songList[id].setVolume(volume);
+        }
+
+        public float getVolume(int id)
+        {
+            return (_songList[id].getVolume());
+        }
     }
 }

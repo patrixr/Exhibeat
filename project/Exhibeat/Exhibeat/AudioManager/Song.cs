@@ -16,6 +16,7 @@ namespace Exhibeat.AudioPlayer
         private FMOD.RESULT     _res;
         private String          _path;
         private bool            _play;
+        private float           _volume;
         private myCallback      _startCall;
         private myCallback      _stopCall;
         private myCallback      _endCall;
@@ -42,6 +43,7 @@ namespace Exhibeat.AudioPlayer
             _syncCall = null;
             _path = path;
             _play = false;
+            _volume = 1;
             _lib.createSound(_path, MODE.HARDWARE, ref _song);
             _call = new CHANNEL_CALLBACK(onChanelCallBack);
         }
@@ -62,6 +64,48 @@ namespace Exhibeat.AudioPlayer
             return (FMOD.RESULT.OK);
         }
 
+        public void setVolume(float volume)
+        {
+            if (volume >= 0 && volume <= 1)
+            {
+                _volume = volume;
+                if (_chanel != null)
+                    _chanel.setVolume(_volume);
+            }
+        }
+
+        public void increaseVolume()
+        {
+            if (_volume + 0.05 <= 1)
+                _volume += 0.05f;
+            else
+                _volume = 1;
+            if (_chanel != null)
+                _chanel.setVolume(_volume);
+        }
+
+        public void decreaseVolume()
+        {
+            if (_volume - 0.05 >= 0)
+                _volume -= 0.05f;
+            else
+                _volume = 0;
+            if (_chanel != null)
+                _chanel.setVolume(_volume);
+        }
+
+        public float getVolume()
+        {
+            float curVolume = 1;
+            
+            if (_chanel != null)
+            {
+                _chanel.getVolume(ref curVolume);
+                return (curVolume);
+            }
+            return (_volume);
+        }
+
         public void destroy()
         {
             _song.release();
@@ -77,10 +121,8 @@ namespace Exhibeat.AudioPlayer
             {
                 _res = _lib.playSound(CHANNELINDEX.FREE, _song, false, ref _chanel);
                 if (_res != FMOD.RESULT.OK)
-                {
                     throw new Exception("Song : File not found");
-                }
-                
+                _chanel.setVolume(_volume);
                 _chanel.setCallback(_call);
             }
             _play = true;
