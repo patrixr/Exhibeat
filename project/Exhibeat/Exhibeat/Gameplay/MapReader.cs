@@ -5,6 +5,8 @@ using System.Text;
 using Exhibeat.Parser;
 using Exhibeat.AudioPlayer;
 using Exhibeat.Rhythm;
+using Exhibeat.Settings;
+using ExhiBeat.KeyReader;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework;
 using Exhibeat.Settings;
@@ -35,8 +37,9 @@ namespace Exhibeat.Gameplay
         protected EXParser              _parser;
         protected Map                   _currentMap;
         protected List<Note>            _upcomingNotes;
-        protected int _timeElapsed;
-        protected int _currentPos;
+
+        protected int                   _timeElapsed;
+        protected int                   _currentPos;
 
         /// <summary>
         /// TODO CHANGER LE NOM
@@ -51,11 +54,14 @@ namespace Exhibeat.Gameplay
         protected bool _notePlayed = false;
         protected int  _line;
 
+        protected IKeyReader _keyReader;
+
 
         public MapReader()
         {
             _line = 0;
             _eventReceiverList = new List<EventRecievers>();
+            _keyReader = new KeyReader();
         }
 
         #region GAME OVERRIDE
@@ -68,7 +74,11 @@ namespace Exhibeat.Gameplay
 
         public bool Read(string songFilePath)
         {
+<<<<<<< HEAD
             _currentMap  = _parser.parse(ExhibeatSettings.ResourceFolder + songFilePath);
+=======
+            _currentMap = _parser.parse(songFilePath);
+>>>>>>> origin/marti_p/gameplay
             if (_currentMap == null)
                 return false;
             _songIndex = _audioManager.open(ExhibeatSettings.ResourceFolder + _currentMap.Path);
@@ -120,6 +130,7 @@ namespace Exhibeat.Gameplay
             if (_songPlaying && _upcomingNotes != null)
             {
                 int tmp = (int)_audioManager.getCurrentPosMs(_songIndex);
+<<<<<<< HEAD
                 _timeElapsed =  tmp - _currentPos;
                 Console.WriteLine(_timeElapsed);
                 _currentPos = tmp;
@@ -134,6 +145,22 @@ namespace Exhibeat.Gameplay
                         SendEvent(songEvent.NEWNOTE, new NoteEventParameter() { note = note.Length, delayms = delay });
                         Console.WriteLine("playing button " + note.Length + " at " + note.Offset + " with a delay of " + delay);
                         
+=======
+                _timeElapsed = tmp - _currentPos;
+                _currentPos = tmp;
+                ExhibeatSettings.TimeElapsed = _timeElapsed;
+
+                handleUserInput();
+
+                foreach (Note note in _upcomingNotes)
+                {
+                    int delay;
+                    delay = note.Offset - _currentPos;
+                    if (delay <= ExhibeatSettings.TileGrowthDuration)
+                    {
+                        SendEvent(songEvent.NEWNOTE, new NoteEventParameter() { note = note.Button, delayms = delay });
+                        Console.WriteLine("playing button " + note.Length + " at " + note.Offset + " with a delay of " + delay);
+>>>>>>> origin/marti_p/gameplay
                         _line++;
                     }
                 }
@@ -141,6 +168,34 @@ namespace Exhibeat.Gameplay
         }
 
         #endregion
+
+        private void handleUserInput()
+        {
+            Key _key = new Key();
+            while ((_key = _keyReader.getNextKeyEvent()) != null)
+            {
+                if (_key.type == keyType.pressed)
+                {
+                    _currentPos = (int)_audioManager.getCurrentPosMs(_songIndex);
+                    SendEvent(userEvent.NOTEPRESSED, new NoteEventParameter() { note = _key.pos, delayms = 0 });
+                    foreach (Note note in _upcomingNotes)
+                    {
+                        //TIMING
+                    }
+                }
+                else if (_key.type == keyType.realeased)
+                    SendEvent(userEvent.NOTERELEASED, new NoteEventParameter() { note = _key.pos, delayms = 0 });
+            }
+        }
+
+        public uint getMapCompletion()
+        {
+            uint totalSize = _audioManager.getLengthMs(_songIndex);
+            uint currentPos = _audioManager.getCurrentPosMs(_songIndex);
+
+
+            return ((currentPos * 100) / totalSize);
+        }
 
         public void SendEvent(songEvent ev, Object param)
         {
