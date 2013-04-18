@@ -86,6 +86,7 @@
     <Compile Include="AudioManager\ISong.cs" />
     <Compile Include="AudioManager\Song.cs" />
     <Compile Include="Components\LifeBar.cs" />
+    <Compile Include="Components\NoteGradeDisplay.cs" />
     <Compile Include="Components\Visualizer.cs" />
     <Compile Include="Components\VisualizerBar.cs" />
     <Compile Include="Gameplay\Map.cs" />
