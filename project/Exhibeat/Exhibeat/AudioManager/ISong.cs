@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Exhibeat.AudioPlayer
 {
-    public interface ISong
+    interface ISong
     {
         void     init(String path);
         void     destroy();
@@ -19,6 +19,10 @@ namespace Exhibeat.AudioPlayer
         uint     getLengthS();
         String   getArtist();
         bool     isPlaying();
+        void     increaseVolume();
+        void     decreaseVolume();
+        void     setVolume(float volume);
+        float    getVolume();
     
         void setOnStartCallBack(myCallback startCall);
         void setOnStopCallBack(myCallback startCall);

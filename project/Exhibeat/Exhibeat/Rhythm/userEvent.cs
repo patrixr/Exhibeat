@@ -11,6 +11,8 @@ namespace Exhibeat.Rhythm
         NOTEGOOD,
         NOTENORMAL,
         NOTEBAD,
-        NOTEFAIL
+        NOTEFAIL,
+        NOTEPRESSED,
+        NOTERELEASED
     };
 }

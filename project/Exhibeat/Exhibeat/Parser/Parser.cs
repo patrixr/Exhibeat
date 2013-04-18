@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using Exhibeat.Gameplay;
+using System.Text.RegularExpressions;
 
 namespace Exhibeat.Parser
 {
@@ -47,13 +48,13 @@ namespace Exhibeat.Parser
         {
             switch (label)
             {
-                case "[SONG]" :
+                case "[SONG]":
                     setSongLabel(info);
                     break;
-                case "[MAP]" :
+                case "[MAP]":
                     setMapLabel(info);
                     break;
-                case "[NOTES]" :
+                case "[NOTES]":
                     setNotesLabel(info);
                     break;
             }
@@ -80,7 +81,7 @@ namespace Exhibeat.Parser
             _map.Artist = infos[2];
             _map.Length = int.Parse(infos[3]);
         }
-        private difficulty getDifficulty(string diff)
+        private static difficulty getDifficulty(string diff)
         {
             string[] enums = Enum.GetNames(typeof(difficulty));
             foreach (string difficulty in enums)
@@ -109,7 +110,7 @@ namespace Exhibeat.Parser
             string[] infos = info.Split('\n');
             int nbNotes = infos.Length / 5;
 
-            for (int u = 0  ; u < infos.Length; u++)
+            for (int u = 0; u < infos.Length; u++)
             {
                 if (infos[u].Length >= 2)
                 {
@@ -123,8 +124,19 @@ namespace Exhibeat.Parser
                                 note.Offset = int.Parse(nbList[i]);
                             else if (i == 1)
                                 note.Length = int.Parse(nbList[i]);
-                            else
+                            else if (i == 2)
+                            {
                                 note.Button = int.Parse(nbList[i]);
+                                _timeMap.Add(note);
+                            }
+                            else
+                            {
+                                Note note2 = new Note();
+                                note2.Offset = note.Offset;
+                                note2.Length = note.Length;
+                                note2.Button = int.Parse(nbList[i]);
+                                _timeMap.Add(note2);
+                            }
                         }
                     }
                     _timeMap.Add(note);
@@ -194,5 +206,38 @@ namespace Exhibeat.Parser
             }
             return buffer;
         }
+        public static string extractValueFromString(string key, string str)
+        {
+            //#Title ([a-zA-Z0-9\\-\\.\\'\\(\\) ]+)
+            string pattern = key + "([a-zA-Z0-9\\-\\.\\'\\(\\) ]+)";
+            Regex myRegex = new Regex(pattern);
+            Match m = myRegex.Match(str);
+            string value = null;
+            if (m.Success)
+            {
+                if (m.Groups.Count >= 1)
+                {
+                    value = m.Groups[1].Value;
+                }
+            }
+            return value;
+        }
+        /*public static MapPreview getSongInfo(string path)
+        {
+            StreamReader myFile = new StreamReader(path);
+            string myString = myFile.ReadToEnd();
+            myFile.Close();
+
+            string title = extractValueFromString("#Title ", myString);
+            string artist = extractValueFromString("#Artist ", myString);
+            string lenght = extractValueFromString("#Lenght ", myString);
+
+            string difficulty = extractValueFromString("#Difficulty ", myString);
+            string mp3Path = extractValueFromString("#MP3 ", myString);
+            string offset = extractValueFromString("#Offset ", myString);
+            string bpm = extractValueFromString("#BPM ", myString);
+
+            return (new MapPreview(path, title, artist, int.Parse(lenght), getDifficulty(difficulty), mp3Path, int.Parse(offset), int.Parse(bpm)));
+        }*/
     }
 }

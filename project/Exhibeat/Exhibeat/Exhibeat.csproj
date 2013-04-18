@@ -63,6 +63,10 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Bass.Net, Version=2.4.10.0, Culture=neutral, PublicKeyToken=b7566c273e6ef480, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>NewAudioManager\Bass.Net.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
@@ -75,17 +79,22 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AudioManager\AudioManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AudioManager\IAudioManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AudioManager\ISong.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="AudioManager\Song.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Components\HexPad.cs" />
     <Compile Include="Components\HexTile.cs" />
-    <Compile Include="AudioManager\AudioManager.cs" />
-    <Compile Include="AudioManager\fmod.cs" />
-    <Compile Include="AudioManager\fmod_dsp.cs" />
-    <Compile Include="AudioManager\fmod_errors.cs" />
-    <Compile Include="AudioManager\fmod_memoryinfo.cs" />
-    <Compile Include="AudioManager\IAudioManager.cs" />
-    <Compile Include="AudioManager\ISong.cs" />
-    <Compile Include="AudioManager\Song.cs" />
     <Compile Include="Components\LifeBar.cs" />
+    <Compile Include="Components\NoteGradeDisplay.cs" />
     <Compile Include="Components\Visualizer.cs" />
     <Compile Include="Components\VisualizerBar.cs" />
     <Compile Include="Gameplay\Map.cs" />
@@ -93,6 +102,9 @@
     <Compile Include="Gameplay\Note.cs" />
     <Compile Include="Gameplay\NoteEventParameter.cs" />
     <Compile Include="Parser\Parser.cs" />
+    <Compile Include="KeyReader\IKeyReader.cs" />
+    <Compile Include="KeyReader\Key.cs" />
+    <Compile Include="KeyReader\KeyReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />
@@ -110,7 +122,9 @@
     <Compile Include="Shaders\IEffect.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="AudioManager\fmodex.dll" />
+    <Content Include="AudioManager\bass.dll" />
+    <Content Include="AudioManager\Bass.Net.dll" />
+    <Content Include="AudioManager\Bass.Net.xml" />
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png">
       <XnaPlatformSpecific>true</XnaPlatformSpecific>

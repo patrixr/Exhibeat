@@ -3,186 +3,203 @@ using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Un4seen.Bass;
 
 namespace Exhibeat.AudioPlayer
 {
-    using FMOD;
-
-    public class Song : ISong
+    class Song : ISong
     {
-        private FMOD.System     _lib;
-        private FMOD.Sound      _song;
-        private FMOD.Channel    _chanel;
-        private FMOD.RESULT     _res;
+        private int             _channel;
         private String          _path;
-        private bool            _play;
+        private bool            _isPlaying;
+        private bool            _isPaused;
+        private float           _volume;
         private myCallback      _startCall;
         private myCallback      _stopCall;
         private myCallback      _endCall;
         private myCallback      _syncCall;
         private IntPtr          _ptr;
-        private CHANNEL_CALLBACK _call;
 
-        public Song(ref FMOD.System lib)
+        public Song()
         {
-            _lib = lib;
+            init(null);
         }
 
-        public Song(ref FMOD.System lib, String path)
+        public Song(String path)
         {
-            _lib = lib;
             init(path);
         }
 
-        public void init(string path)
+        public void init(String path)
         {
             _startCall = null;
             _stopCall = null;
             _endCall = null;
             _syncCall = null;
             _path = path;
-            _play = false;
-            _lib.createSound(_path, MODE.HARDWARE, ref _song);
-            _call = new CHANNEL_CALLBACK(onChanelCallBack);
+            _isPlaying = false;
+            _isPaused = false;
+            _volume = 0.2f;
+            if (path != null)
+                _channel = Bass.BASS_StreamCreateFile(path, 0, 0, BASSFlag.BASS_DEFAULT);
+            else
+                _channel = 0;
         }
 
-        private FMOD.RESULT onChanelCallBack(IntPtr chan, FMOD.CHANNEL_CALLBACKTYPE type, IntPtr p1, IntPtr p2)
+        public void setVolume(float volume)
         {
-            if (type == FMOD.CHANNEL_CALLBACKTYPE.END)
+            if (volume >= 0 && volume <= 1 && _channel != 0)
             {
-                stop();
-                if (_endCall != null)
-                    _endCall();
+                _volume = volume;
+                Bass.BASS_ChannelSetAttribute(_channel, BASSAttribute.BASS_ATTRIB_VOL, volume);
             }
-            else if (type == FMOD.CHANNEL_CALLBACKTYPE.SYNCPOINT)
+        }
+
+        public void increaseVolume()
+        {
+            if (_channel != 0)
             {
-                if (_syncCall != null)
-                    _syncCall();
+                if (_volume + 0.05 <= 1)
+                    _volume += 0.05f;
+                else
+                    _volume = 1;
+                Bass.BASS_ChannelSetAttribute(_channel, BASSAttribute.BASS_ATTRIB_VOL, _volume); 
             }
-            return (FMOD.RESULT.OK);
+        }
+
+        public void decreaseVolume()
+        {
+            if (_channel != 0)
+            {
+                if (_volume - 0.05 >= 0)
+                    _volume -= 0.05f;
+                else
+                    _volume = 0;
+                Bass.BASS_ChannelSetAttribute(_channel, BASSAttribute.BASS_ATTRIB_VOL, _volume);
+            }
+        }
+
+        public float getVolume()
+        {
+            return (_volume);
         }
 
         public void destroy()
         {
-            _song.release();
+            Bass.BASS_StreamFree(_channel);
         }
 
         public void play()
         {
-            if (_startCall != null)
-                _startCall();
-            if (_chanel != null)
-                _chanel.setPaused(false);
-            else
+           // if (_startCall != null)
+           //     _startCall();
+            if (_channel != 0)
             {
-                _res = _lib.playSound(CHANNELINDEX.FREE, _song, false, ref _chanel);
-                if (_res != FMOD.RESULT.OK)
-                {
-                    throw new Exception("Song : File not found");
-                }
-                
-                _chanel.setCallback(_call);
+                if (_isPaused == true)
+                    Bass.BASS_ChannelPlay(_channel, false);
+                else
+                    Bass.BASS_ChannelPlay(_channel, true);
+                _isPlaying = true;
+                _isPaused = false;
             }
-            _play = true;
         }
 
         public void stop()
         {
-            if (_stopCall != null)
-                _stopCall();
-            if (_chanel != null)
+            if (_channel != 0)
             {
-                _chanel.stop();
-                _chanel = null;
+                Bass.BASS_ChannelStop(_channel);
+                _isPlaying = false;
+                _isPaused = false;
             }
-            _play = false;
         }
 
         public void pause()
         {
-            if (_chanel != null)
-                _chanel.setPaused(true);
-            _play = false;
+            if (_channel != 0)
+            {
+                Bass.BASS_ChannelStop(_channel);
+                _isPlaying = false;
+                _isPaused = true;
+            }
         }
 
         public uint getCurrentPosMs()
         {
-            uint pos = 0;
+            double pos = 0;
 
-            if (_chanel != null)
-                _chanel.getPosition(ref pos, TIMEUNIT.MS);
-            return (pos);
+            pos = Bass.BASS_ChannelBytes2Seconds(_channel, Bass.BASS_ChannelGetPosition(_channel));
+            pos *= 1000;
+            return ((uint)pos);
         }
 
         public uint getCurrentPosS()
         {
-            uint pos = 0;
+            double pos = 0;
 
-            if (_chanel != null)
-                _chanel.getPosition(ref pos, TIMEUNIT.MS);
-            pos /= 1000;
-            return (pos);
-        }
-
-        public string getTitle()
-        {
-            FMOD.TAG tag = new FMOD.TAG();
-
-            _song.getTag("TITLE", 0, ref tag);
-            return (Marshal.PtrToStringAnsi(tag.data));
+            pos = Bass.BASS_ChannelBytes2Seconds(_channel, Bass.BASS_ChannelGetPosition(_channel));
+            return ((uint)pos);
         }
 
         public uint getLengthMs()
         {
-            uint length = 0;
+            double length = 0;
 
-            if (_song != null)
-                _song.getLength(ref length, TIMEUNIT.MS);
-            return (length);
+            length = Bass.BASS_ChannelBytes2Seconds(_channel, Bass.BASS_ChannelGetLength(_channel));
+            length *= 1000;
+            return ((uint)length);
         }
 
         public uint getLengthS()
         {
-            uint length = 0;
+            double length = 0;
 
-            if (_song != null)
-                _song.getLength(ref length, TIMEUNIT.MS);
-            length /= 1000;
-            return (length);
+            length = Bass.BASS_ChannelBytes2Seconds(_channel, Bass.BASS_ChannelGetLength(_channel));
+            return ((uint)length);
+        }
+
+        public string getTitle()
+        {
+            String title = null;
+
+            title = Bass.BASS_ChannelGetTagsID3V2(_channel)[0];
+            title = title.Remove(0, 5);
+            return (title);
         }
 
         public string getArtist()
         {
-            FMOD.TAG tag = new FMOD.TAG();
-            
-            _song.getTag("ARTIST", 0, ref tag);
-            return (Marshal.PtrToStringAnsi(tag.data));
+            String artist = null;
+
+            artist = Bass.BASS_ChannelGetTagsID3V2(_channel)[1];
+            artist = artist.Remove(0, 5);
+            return (artist);
         }
 
         public bool isPlaying()
         {
-            return (_play);
+            return (_isPlaying);
         }
 
         public void setOnStartCallBack(myCallback startCall)
         {
-            _startCall = startCall;
+          //  _startCall = startCall;
         }
 
         public void setOnStopCallBack(myCallback stopCall)
         {
-            _stopCall = stopCall;
+          // _stopCall = stopCall;
         }
 
         public void setOnEndCallBack(myCallback endCall)
         {
-            _endCall = endCall;
+           // _endCall = endCall;
         }
 
         public void setSyncpointCallBack(uint ms, myCallback syncCall)
         {
-            _song.addSyncPoint(ms, TIMEUNIT.MS, "EndSong", ref _ptr);
-            _syncCall = syncCall;
+          //  _song.addSyncPoint(ms, TIMEUNIT.MS, "EndSong", ref _ptr);
+          //  _syncCall = syncCall;
         }
     }
 }
