@@ -25,7 +25,7 @@ namespace Exhibeat.Components
         private int Left;
 
         ContentManager content;
-        BlurEffect blurEffect;
+        //BlurEffect blurEffect;
 
         #region CONSTRUCTION
         public Visualizer(ContentManager contentman, int bottom = 0, int left = 0, int width = 0, int height = 0, int barCount = 10)
@@ -65,20 +65,20 @@ namespace Exhibeat.Components
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            if (blurEffect == null)
+            /*if (blurEffect == null)
                blurEffect = new BlurEffect(spriteBatch.GraphicsDevice, content);
            spriteBatch.End();
            blurEffect.start();
-           spriteBatch.Begin();
+           spriteBatch.Begin();*/
 
             foreach (VisualizerBar bar in bars)
             {
                 bar.Draw(spriteBatch);
             }
 
-            spriteBatch.End();
+            /*spriteBatch.End();
             blurEffect.applyEffect(spriteBatch);
-            spriteBatch.Begin();
+            spriteBatch.Begin();*/
         }
 
         public override void Update(GameTime gameTime)

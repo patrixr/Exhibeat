@@ -77,9 +77,9 @@ namespace Exhibeat.Components
             {
       
                     if (AimedHeight > Height)
-                        Height++;
+                        Height += 2;
                     else
-                        Height--;
+                        Height -= 1;
                     dest.Y = Bottom - Height;
                     dest.Height =  Height;
                     ElapsedTime = 0;
