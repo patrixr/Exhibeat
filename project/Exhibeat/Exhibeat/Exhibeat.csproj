@@ -95,9 +95,14 @@
     <Compile Include="Components\HexTile.cs" />
     <Compile Include="Components\LifeBar.cs" />
     <Compile Include="Components\NoteGradeDisplay.cs" />
+    <Compile Include="Components\SpiningMenu\GSpiningItem.cs" />
+    <Compile Include="Components\SpiningMenu\GSpiningMenu.cs" />
+    <Compile Include="Components\SpiningMenu\Rectange.cs" />
+    <Compile Include="Components\SpiningMenu\SpiningItem.cs" />
     <Compile Include="Components\Visualizer.cs" />
     <Compile Include="Components\VisualizerBar.cs" />
     <Compile Include="Gameplay\Map.cs" />
+    <Compile Include="Gameplay\MapPreview.cs" />
     <Compile Include="Gameplay\MapReader.cs" />
     <Compile Include="Gameplay\Note.cs" />
     <Compile Include="Gameplay\NoteEventParameter.cs" />
@@ -167,6 +172,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
   <!--

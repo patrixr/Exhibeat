@@ -74,7 +74,7 @@ namespace Exhibeat.Gameplay
 
         public bool Read(string songFilePath)
         {
-            _currentMap  = _parser.parse(ExhibeatSettings.ResourceFolder + songFilePath);
+            _currentMap  = _parser.parse(songFilePath);
 
             //_currentMap = _parser.parse(songFilePath);
 
