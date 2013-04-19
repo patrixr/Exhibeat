@@ -222,7 +222,7 @@ namespace Exhibeat.Parser
             }
             return value;
         }
-        /*public static MapPreview getSongInfo(string path)
+        public static MapPreview getSongInfo(string path)
         {
             StreamReader myFile = new StreamReader(path);
             string myString = myFile.ReadToEnd();
@@ -238,6 +238,6 @@ namespace Exhibeat.Parser
             string bpm = extractValueFromString("#BPM ", myString);
 
             return (new MapPreview(path, title, artist, int.Parse(lenght), getDifficulty(difficulty), mp3Path, int.Parse(offset), int.Parse(bpm)));
-        }*/
+        }
     }
 }

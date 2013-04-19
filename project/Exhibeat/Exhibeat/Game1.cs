@@ -53,7 +53,7 @@ namespace Exhibeat
         protected override void LoadContent()
         {
             // Err mgmnt
-            this.screenManager.pushScreen(new GameScreen(this));
+            this.screenManager.pushScreen(new SongSelectionScreen(this));
 
             base.LoadContent();
         }

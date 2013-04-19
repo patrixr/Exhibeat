@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Exhibeat.Components;
 using Exhibeat.Settings;
 using Exhibeat.Gameplay;
+using Microsoft.Xna.Framework.Input;
 
 namespace Exhibeat.Screens
 {
@@ -26,11 +27,17 @@ namespace Exhibeat.Screens
         //private AnimatedSprite runner;
 
         private MapReader mapReader;
+        private MapPreview _mapPreview;
 
         public GameScreen(HumbleGame game)
             : base(game)
         {
 
+        }
+        public GameScreen(HumbleGame game, MapPreview map)
+            : base(game)
+        {
+            _mapPreview = map;
         }
 
         public override void Initialize()
@@ -44,7 +51,7 @@ namespace Exhibeat.Screens
             mapReader.Initialize(Content);
             mapReader.RegisterNewReciever(pad);
 
-            mapReader.Read("test.exi");
+            mapReader.Read(_mapPreview.FilePath);
             mapReader.Play();
 
             //visualizer = new Visualizer(Content, 500, 0, 800, 100, 100);
@@ -68,6 +75,12 @@ namespace Exhibeat.Screens
             if (p.X < 300)
                 p.X += 1;
             runner.Position = p;*/
+
+            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+            {
+                ScreenManager.GetInstance().popScreen();
+                mapReader.Stop();
+            }
 
             base.Update(gameTime);
         }
