@@ -30,7 +30,7 @@ namespace Exhibeat.Settings
 
         public static int TimeElapsed { get; set; }
 
-        public static string ResourceFolder = "C:\\Users\\julie_000\\Desktop\\test\\";
+        public static string ResourceFolder = ".\\test\\";
 
         private static IAudioManager audioManager = null;
 

@@ -74,6 +74,8 @@ namespace Exhibeat.Components
 
         BlurEffect      blurEffect;
 
+        Color glowColor = Color.Orange;
+
 #if ANIMATED_TILE
         private SpriteSheet spritesheet;
 #endif
@@ -143,7 +145,7 @@ namespace Exhibeat.Components
             spriteBatch.Begin();*/
             
              if (glowOpacity > 0f)
-                spriteBatch.Draw(texture_press, position, null, Color.Orange * glowOpacity, 0, press_origin, Scale, SpriteEffects.None, 0);
+                 spriteBatch.Draw(texture_press, position, null, glowColor * glowOpacity, 0, press_origin, Scale, SpriteEffects.None, 0);
 
              spriteBatch.Draw(texture_base, position, null, Color.White, 0, note_origin, Scale, SpriteEffects.None, 0);
           
@@ -174,7 +176,7 @@ namespace Exhibeat.Components
                     notes.Remove(note);
                     ExhibeatSettings.GetAudioManager().stop(clapSongIdx);
                     ExhibeatSettings.GetAudioManager().play(clapSongIdx);
-                    Press();
+                    //Press();
                     i--;
                 }
 #if ANIMATED_TILE
@@ -206,10 +208,18 @@ namespace Exhibeat.Components
             }
         }
 
+        public void Press(Color col)
+        {
+            pressAnimation = true;
+            glowTargetOpacity = 1f;
+            glowColor = col;
+        }
+
         public void Press()
         {
             pressAnimation = true;
             glowTargetOpacity = 1f;
+            glowColor = Color.Orange;
         }
 
         public void NewNote(int duration)

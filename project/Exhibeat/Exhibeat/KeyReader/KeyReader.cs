@@ -53,13 +53,13 @@ namespace ExhiBeat.KeyReader
         {
             KeyboardState state = Keyboard.GetState();
 
-            checkKey(state, Keys.S, 0);
+            checkKey(state, Keys.S, 3);
             checkKey(state, Keys.E, 1);
-            checkKey(state, Keys.D, 2);
-            checkKey(state, Keys.X, 3);
-            checkKey(state, Keys.Z, 4);
-            checkKey(state, Keys.A, 5);
-            checkKey(state, Keys.W, 6);
+            checkKey(state, Keys.D, 4);
+            checkKey(state, Keys.X, 6);
+            checkKey(state, Keys.Z, 5);
+            checkKey(state, Keys.A, 2);
+            checkKey(state, Keys.W, 0);
         }
 
         public Key getNextKeyEvent()
