@@ -28,6 +28,7 @@ namespace Exhibeat.Screens
         private LifeBar lifebar;
         private NoteGradeDisplay grades;
         private BlurEffect blurEffect = null;
+        private ScrollingBackground scrollingbackground;
 
         private Texture2D background;
         private Rectangle background_dest;
@@ -51,6 +52,8 @@ namespace Exhibeat.Screens
             grades = new NoteGradeDisplay(Content);
             lifebar = new LifeBar(Content,30,30);
 
+            scrollingbackground = new ScrollingBackground(Content);
+
             mapReader = new MapReader();
             mapReader.Initialize(Content);
             mapReader.RegisterNewReciever(pad);
@@ -59,14 +62,15 @@ namespace Exhibeat.Screens
             mapReader.Play();
 
             mapReader.RegisterNewReciever(this);
+            mapReader.RegisterNewReciever(lifebar);
 
-            visualizer = new Visualizer(Content, 0, 0, 0, ExhibeatSettings.WindowHeight / 4, 30);
+            visualizer = new Visualizer(Content, 0, 0, 0, ExhibeatSettings.WindowHeight / 4, 50);
             mapReader.RegisterNewReciever(visualizer);
 
             //runner = new AnimatedSprite(Content.Load<Texture2D>("running-test"), Content.Load<SpriteSheet>("running-test-sheet"), new Vector2(100, 100), false);
             //runner.Position = new Vector2(0, 0/* ExhibeatSettings.WindowHeight - Content.Load<Texture2D>("running-test").Height / 2*/);
 
-            background = Content.Load<Texture2D>("blueWP");
+            background = Content.Load<Texture2D>("wp_back");
             background_dest = new Rectangle(0, 0, ExhibeatSettings.WindowWidth, ExhibeatSettings.WindowHeight);
 
             base.Initialize();
@@ -75,6 +79,7 @@ namespace Exhibeat.Screens
         int osef = 0;
         public override void Update(GameTime gameTime)
         {
+            scrollingbackground.Update(gameTime);
             visualizer.Update(gameTime);
             pad.Update(gameTime);
             mapReader.Update(gameTime);
@@ -97,29 +102,39 @@ namespace Exhibeat.Screens
 
         public override void Draw()
         {
+
+           /* RenderTarget2D tmp_buf = new RenderTarget2D(SpriteBatch.GraphicsDevice, SpriteBatch.GraphicsDevice.Viewport.Width, SpriteBatch.GraphicsDevice.Viewport.Height);
+            SpriteBatch.GraphicsDevice.SetRenderTarget(tmp_buf);
+
+            SpriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+
+            SpriteBatch.Draw(background, background_dest, Color.White);
+            SpriteBatch.End();*/
+
+
+            ////SHADERS START
+            //if (blurEffect == null)
+              //   blurEffect = new BlurEffect(SpriteBatch.GraphicsDevice, Content);
+            
+            //blurEffect.start();
             SpriteBatch.Begin();
 
-            //SHADERS START
-            if (blurEffect == null)
-                blurEffect = new BlurEffect(SpriteBatch.GraphicsDevice, Content);
-            SpriteBatch.End();
-            blurEffect.start();
-            SpriteBatch.Begin();
-
-            SpriteBatch.Draw(background, background_dest, Color.Navy);
+            SpriteBatch.Draw(background, background_dest, Color.White);
+            scrollingbackground.Draw(SpriteBatch);
             visualizer.Draw(SpriteBatch);
             //pad.Draw(SpriteBatch);
             //lifebar.Draw(SpriteBatch);
 
             // SHADERS END
             SpriteBatch.End();
-            blurEffect.applyEffect(SpriteBatch);
-            SpriteBatch.Begin();
+            //blurEffect.applyEffect(SpriteBatch);
 
+            SpriteBatch.GraphicsDevice.SetRenderTarget(null);
+            SpriteBatch.Begin();
             pad.Draw(SpriteBatch);
             lifebar.Draw(SpriteBatch);
             grades.Draw(SpriteBatch);
-
+            //visualizer.Draw(SpriteBatch);
             //runner.Draw(SpriteBatch);
 
             SpriteBatch.End();

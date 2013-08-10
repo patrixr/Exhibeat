@@ -72,6 +72,9 @@ namespace Exhibeat.Components
         private ContentManager content;
         private Texture2D texture_base;
 
+        private int elapsed_ms = 0;
+        private int glowApparitionSpeed = 10; //(opacity/sec)
+
         BlurEffect      blurEffect;
 
         Color glowColor = Color.Orange;
@@ -187,6 +190,9 @@ namespace Exhibeat.Components
 
             if (pressAnimation)
             {
+                elapsed_ms += gameTime.ElapsedGameTime.Milliseconds;
+                if (elapsed_ms < 10)
+                    return;
                 if (glowTargetOpacity > 0f) // apparition
                 {
                     if (glowOpacity >= 0.7f)
@@ -197,14 +203,14 @@ namespace Exhibeat.Components
                 else // disparition
                 {
                     if (glowOpacity > 0f)
-                        glowOpacity -= 0.01f;
+                        glowOpacity -= 0.1f;
                     else
                     {
                         glowOpacity = 0f;
                         pressAnimation = false;
                     }
-
                 }
+                elapsed_ms = 0;
             }
         }
 

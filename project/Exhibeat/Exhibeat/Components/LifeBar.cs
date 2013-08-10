@@ -100,7 +100,8 @@ namespace Exhibeat.Components
 
         public void NewUserEvent(userEvent ev, object param)
         {
-
+            if (ev == userEvent.NOTEVERYGOOD)
+                Completion = Completion + 0.05f;
         }
     }
 }
