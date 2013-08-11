@@ -83,12 +83,21 @@ namespace Exhibeat.Screens
         int osef = 0;
         public override void Update(GameTime gameTime)
         {
+            mapReader.Update(gameTime);
+
+            if (mapReader.getMapCompletion() >= 30)
+            {
+                mapReader.Stop();
+                ScreenManager.Singleton.popScreen();
+                ScreenManager.Singleton.pushScreen(new ScoreScreen(this.Game, scoreLogger));
+            }
+
             scrollingbackground.Update(gameTime);
             visualizer.Update(gameTime);
             pad.Update(gameTime);
-            mapReader.Update(gameTime);
             lifebar.Update(gameTime);
             grades.Update(gameTime);
+            scoreLogger.Update(gameTime);
             //runner.Update(gameTime);
 
             base.Update(gameTime);

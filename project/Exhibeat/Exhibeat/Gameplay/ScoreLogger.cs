@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Exhibeat.Rhythm;
+using Microsoft.Xna.Framework;
 
 namespace Exhibeat.Gameplay
 {
@@ -10,7 +11,8 @@ namespace Exhibeat.Gameplay
     {
         private List<float> graphValues = new List<float>();
         private Dictionary<userEvent, int> hitCounts = new Dictionary<userEvent, int>();
-        private float current_completion = 0.5f;
+        private float current_completion = 1f;
+        private int elapsed_ms = 0;
 
         public ScoreLogger()
         {
@@ -36,8 +38,23 @@ namespace Exhibeat.Gameplay
             return current_completion;
         }
 
+        public void LogCurrentLife()
+        {
+            graphValues.Add(current_completion);
+        }
+
         public void NewSongEvent(songEvent ev, object param)
         {
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            elapsed_ms += gameTime.ElapsedGameTime.Milliseconds;
+            if (elapsed_ms > 1000)
+            {
+                LogCurrentLife();
+                elapsed_ms = 0;
+            }
         }
 
         public void NewUserEvent(userEvent ev, object param)
@@ -60,6 +77,7 @@ namespace Exhibeat.Gameplay
 
             hitCounts[ev] += 1;
             graphValues.Add(current_completion);
+            elapsed_ms = 0;
         }
     }
 }
