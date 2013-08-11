@@ -117,6 +117,7 @@
     <Compile Include="Screens\AnimatedBackgroundScreen.cs" />
     <Compile Include="Screens\GameScreen.cs" />
     <Compile Include="Screens\MainMenuScreen.cs" />
+    <Compile Include="Screens\ScoreScreen.cs" />
     <Compile Include="Screens\SongSelectionScreen.cs" />
     <Compile Include="Settings\ExhibeatSettings.cs" />
     <Compile Include="Shaders\AEffect.cs" />
