@@ -146,7 +146,7 @@ namespace Exhibeat.Gameplay
                         int diff = Math.Abs(note.Offset - _currentPos);
 
                         // IS THE NOTE PAST AND FAILED ?
-                        if ((note.Offset < _currentPos) && diff > 500)
+                        if ((note.Offset < _currentPos) && diff > 100)
                         {
                             SendEvent(userEvent.NOTEFAIL, new NoteEventParameter() { note = note.Button, delayms = diff });
                             note_queue.RemoveAt(0);

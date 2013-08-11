@@ -174,7 +174,7 @@ namespace Exhibeat.Components
             {
                 VisualNote note = notes[i];
                 note.Update(ExhibeatSettings.TimeElapsed /*gameTime.ElapsedGameTime.Milliseconds*/);
-                if (note.time_left < 0)
+                if (note.time_left <= 0)
                 {
                     notes.Remove(note);
                     ExhibeatSettings.GetAudioManager().stop(clapSongIdx);
