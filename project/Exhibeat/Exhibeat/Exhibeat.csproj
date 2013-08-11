@@ -102,6 +102,7 @@
     <Compile Include="Gameplay\MapReader.cs" />
     <Compile Include="Gameplay\Note.cs" />
     <Compile Include="Gameplay\NoteEventParameter.cs" />
+    <Compile Include="Gameplay\ScoreLogger.cs" />
     <Compile Include="Parser\Parser.cs" />
     <Compile Include="KeyReader\IKeyReader.cs" />
     <Compile Include="KeyReader\Key.cs" />

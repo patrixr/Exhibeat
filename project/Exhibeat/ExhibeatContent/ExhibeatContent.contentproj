@@ -163,13 +163,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="mysticsquare.png">
-      <Name>mysticsquare</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="wp_back.png">
       <Name>wp_back</Name>
       <Importer>TextureImporter</Importer>
@@ -177,6 +170,20 @@
     </Compile>
     <Compile Include="wp_front.png">
       <Name>wp_front</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="wp_back2.png">
+      <Name>wp_back2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="wp_back3.png">
+      <Name>wp_back3</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

@@ -29,6 +29,7 @@ namespace Exhibeat.Screens
         private NoteGradeDisplay grades;
         private BlurEffect blurEffect = null;
         private ScrollingBackground scrollingbackground;
+        private ScoreLogger scoreLogger;
 
         private Texture2D background;
         private Rectangle background_dest;
@@ -50,7 +51,6 @@ namespace Exhibeat.Screens
             pad.Scale = 1;
 
             grades = new NoteGradeDisplay(Content);
-            lifebar = new LifeBar(Content,30,30);
 
             scrollingbackground = new ScrollingBackground(Content);
 
@@ -62,10 +62,14 @@ namespace Exhibeat.Screens
             mapReader.Play();
 
             mapReader.RegisterNewReciever(this);
-            mapReader.RegisterNewReciever(lifebar);
+
+            scoreLogger = new ScoreLogger();
 
             visualizer = new Visualizer(Content, 0, 0, 0, ExhibeatSettings.WindowHeight / 3, 50);
             mapReader.RegisterNewReciever(visualizer);
+            mapReader.RegisterNewReciever(scoreLogger);
+
+            lifebar = new LifeBar(Content, scoreLogger, 30, 30);
 
             //runner = new AnimatedSprite(Content.Load<Texture2D>("running-test"), Content.Load<SpriteSheet>("running-test-sheet"), new Vector2(100, 100), false);
             //runner.Position = new Vector2(0, 0/* ExhibeatSettings.WindowHeight - Content.Load<Texture2D>("running-test").Height / 2*/);

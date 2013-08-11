@@ -13,7 +13,7 @@ using Exhibeat.Shaders;
 
 namespace Exhibeat.Components
 {
-    class LifeBar : AComponent, ITimeEventReciever
+    class LifeBar : AComponent
     {
         private ContentManager content;
 
@@ -24,30 +24,21 @@ namespace Exhibeat.Components
 
         private Rectangle bar_dest;
 
+        private ScoreLogger scoreLogger;
+
         private float current_completion;
         private float     completion;
-        public float      Completion
-        {
-            get { return completion; }
-            set
-            {
-                if (value > 1.0f)
-                    completion = 1.0f;
-                else if (value < 0f)
-                    completion = 0f;
-                else
-                    completion = value;
-            }
-        }
 
         #region CONSTRUCTION
-        public LifeBar(ContentManager contentman, int x = 0, int y = 0)
+        public LifeBar(ContentManager contentman, ScoreLogger sl, int x = 0, int y = 0)
             : base()
         {
             content = contentman;
 
-            completion = 0.5f;
+            completion = sl.GetCurrentLife();
             current_completion = 0f;
+
+            scoreLogger = sl;
 
             position = new Vector2(x, y);
 
@@ -75,6 +66,7 @@ namespace Exhibeat.Components
 
         public override void Update(GameTime gameTime)
         {
+            completion = scoreLogger.GetCurrentLife();
             if (completion > current_completion)
             {
                 current_completion += 0.01f;
@@ -92,16 +84,5 @@ namespace Exhibeat.Components
         }
 
         #endregion
-
-        public void NewSongEvent(songEvent ev, object param)
-        {
-            
-        }
-
-        public void NewUserEvent(userEvent ev, object param)
-        {
-            if (ev == userEvent.NOTEVERYGOOD)
-                Completion = Completion + 0.05f;
-        }
     }
 }
