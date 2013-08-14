@@ -18,7 +18,7 @@ namespace Exhibeat.Gameplay
 {
     public class MapReader : ITimeEventEmitter
     {
-        public class EventRecievers
+          public class EventRecievers
         {
             public ITimeEventReciever recv;
             public bool songEvents;
@@ -77,13 +77,12 @@ namespace Exhibeat.Gameplay
 
         public bool Read(string songFilePath)
         {
-            _currentMap  = _parser.parse(ExhibeatSettings.ResourceFolder + songFilePath);
 
-            //_currentMap = _parser.parse(songFilePath);
+            _currentMap = _parser.parse(songFilePath);
 
             if (_currentMap == null)
                 return false;
-            _songIndex = _audioManager.open(ExhibeatSettings.ResourceFolder + _currentMap.Path);
+            _songIndex = _audioManager.open(ExhibeatSettings.ResourceFolder + _currentMap.Artist + " - " + _currentMap.Title + "/" + _currentMap.Path);
             return true;
         }
         public bool Play()
@@ -146,7 +145,7 @@ namespace Exhibeat.Gameplay
                         int diff = Math.Abs(note.Offset - _currentPos);
 
                         // IS THE NOTE PAST AND FAILED ?
-                        if ((note.Offset < _currentPos) && diff > 800)
+                        if ((note.Offset < _currentPos) && diff > 100)
                         {
                             SendEvent(userEvent.NOTEFAIL, new NoteEventParameter() { note = note.Button, delayms = diff });
                             note_queue.RemoveAt(0);
@@ -176,8 +175,6 @@ namespace Exhibeat.Gameplay
                             _displayedNoteQueues[note.Button].Last().Offset != note.Offset)
                         {
                             _displayedNoteQueues[note.Button].Add(new Note(note.Offset, note.Length, note.Button));
-                            if (note.Button == 0)
-                                Console.WriteLine("==========> " + _displayedNoteQueues[0].Count);
                         }
                         _line++;
                     }
@@ -196,7 +193,6 @@ namespace Exhibeat.Gameplay
             {
                 if (key.type == keyType.pressed)
                 {
-                    Console.WriteLine("pressing button " + key.pos);
                     _currentPos = (int)_audioManager.getCurrentPosMs(_songIndex);
                     if (_displayedNoteQueues[key.pos].Count == 0)
                         SendEvent(userEvent.NOTEPRESSED, new NoteEventParameter() { note = key.pos, delayms = 0 });
@@ -205,14 +201,14 @@ namespace Exhibeat.Gameplay
                         // TIMING
                         Note note = _displayedNoteQueues[key.pos][0];
                         int diff = Math.Abs(note.Offset - _currentPos);
-
-                        if (diff <= 150)
+                        Console.WriteLine(diff);
+                        if (diff <= 100)
                             SendEvent(userEvent.NOTEVERYGOOD, new NoteEventParameter() { note = key.pos, delayms = diff });
-                        else if (diff <= 300)
+                        else if (diff <= 200)
                             SendEvent(userEvent.NOTEGOOD, new NoteEventParameter() { note = key.pos, delayms = diff });
-                        else if (diff <= 500)
+                        else if (diff <= 300)
                             SendEvent(userEvent.NOTENORMAL, new NoteEventParameter() { note = key.pos, delayms = diff });
-                        else if (diff <= 700)
+                        else if (diff <= 500)
                             SendEvent(userEvent.NOTEBAD, new NoteEventParameter() { note = key.pos, delayms = diff });
                         else
                             SendEvent(userEvent.NOTEFAIL, new NoteEventParameter() { note = key.pos, delayms = diff });

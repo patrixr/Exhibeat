@@ -28,17 +28,26 @@ namespace Exhibeat.Screens
         private LifeBar lifebar;
         private NoteGradeDisplay grades;
         private BlurEffect blurEffect = null;
+        private ScrollingBackground scrollingbackground;
+        private ScoreLogger scoreLogger;
 
         private Texture2D background;
         private Rectangle background_dest;
         //private AnimatedSprite runner;
 
         private MapReader mapReader;
+        private MapPreview _mapPreview;
 
         public GameScreen(HumbleGame game)
             : base(game)
         {
 
+        }
+
+        public GameScreen(HumbleGame game, MapPreview map)
+            : base(game)
+        {
+            _mapPreview = map;
         }
 
         public override void Initialize()
@@ -49,24 +58,30 @@ namespace Exhibeat.Screens
             pad.Scale = 1;
 
             grades = new NoteGradeDisplay(Content);
-            lifebar = new LifeBar(Content,30,30);
+
+            scrollingbackground = new ScrollingBackground(Content);
 
             mapReader = new MapReader();
             mapReader.Initialize(Content);
             mapReader.RegisterNewReciever(pad);
 
-            mapReader.Read("test.exi");
+            mapReader.Read(_mapPreview.FilePath);
             mapReader.Play();
 
             mapReader.RegisterNewReciever(this);
 
-            visualizer = new Visualizer(Content, 0, 0, 0, ExhibeatSettings.WindowHeight / 4, 30);
+            scoreLogger = new ScoreLogger();
+
+            visualizer = new Visualizer(Content, 0, 0, 0, ExhibeatSettings.WindowHeight / 3, 50);
             mapReader.RegisterNewReciever(visualizer);
+            mapReader.RegisterNewReciever(scoreLogger);
+
+            lifebar = new LifeBar(Content, scoreLogger, 30, 30);
 
             //runner = new AnimatedSprite(Content.Load<Texture2D>("running-test"), Content.Load<SpriteSheet>("running-test-sheet"), new Vector2(100, 100), false);
             //runner.Position = new Vector2(0, 0/* ExhibeatSettings.WindowHeight - Content.Load<Texture2D>("running-test").Height / 2*/);
 
-            background = Content.Load<Texture2D>("blueWP");
+            background = Content.Load<Texture2D>("wp_back");
             background_dest = new Rectangle(0, 0, ExhibeatSettings.WindowWidth, ExhibeatSettings.WindowHeight);
 
             base.Initialize();
@@ -75,11 +90,21 @@ namespace Exhibeat.Screens
         int osef = 0;
         public override void Update(GameTime gameTime)
         {
+            mapReader.Update(gameTime);
+
+            if (mapReader.getMapCompletion() >= 30)
+            {
+                mapReader.Stop();
+                ScreenManager.Singleton.popScreen();
+                ScreenManager.Singleton.pushScreen(new ScoreScreen(this.Game, scoreLogger));
+            }
+
+            scrollingbackground.Update(gameTime);
             visualizer.Update(gameTime);
             pad.Update(gameTime);
-            mapReader.Update(gameTime);
             lifebar.Update(gameTime);
             grades.Update(gameTime);
+            scoreLogger.Update(gameTime);
             //runner.Update(gameTime);
 
             base.Update(gameTime);
@@ -97,29 +122,42 @@ namespace Exhibeat.Screens
 
         public override void Draw()
         {
-            SpriteBatch.Begin();
 
-            //SHADERS START
+           /* RenderTarget2D tmp_buf = new RenderTarget2D(SpriteBatch.GraphicsDevice, SpriteBatch.GraphicsDevice.Viewport.Width, SpriteBatch.GraphicsDevice.Viewport.Height);
+            SpriteBatch.GraphicsDevice.SetRenderTarget(tmp_buf);
+
+            SpriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+
+            SpriteBatch.Draw(background, background_dest, Color.White);
+            SpriteBatch.End();*/
+
+
+            ////SHADERS START
             if (blurEffect == null)
-                blurEffect = new BlurEffect(SpriteBatch.GraphicsDevice, Content);
-            SpriteBatch.End();
+                 blurEffect = new BlurEffect(SpriteBatch.GraphicsDevice, Content);
+            
             blurEffect.start();
             SpriteBatch.Begin();
 
-            SpriteBatch.Draw(background, background_dest, Color.Navy);
+            SpriteBatch.Draw(background, background_dest, Color.White);
+            scrollingbackground.Draw(SpriteBatch);
             visualizer.Draw(SpriteBatch);
+
             //pad.Draw(SpriteBatch);
             //lifebar.Draw(SpriteBatch);
 
             // SHADERS END
             SpriteBatch.End();
             blurEffect.applyEffect(SpriteBatch);
-            SpriteBatch.Begin();
 
+        
+            SpriteBatch.Begin();
+            
             pad.Draw(SpriteBatch);
             lifebar.Draw(SpriteBatch);
             grades.Draw(SpriteBatch);
 
+            //visualizer.Draw(SpriteBatch);
             //runner.Draw(SpriteBatch);
 
             SpriteBatch.End();
@@ -128,7 +166,6 @@ namespace Exhibeat.Screens
 
         public void NewSongEvent(songEvent ev, object param)
         {
-           
         }
 
         public void NewUserEvent(userEvent ev, object param)

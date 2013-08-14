@@ -10,6 +10,6 @@ namespace Exhibeat.Shaders
     {
         void start();
         void end();
-        void applyEffect(SpriteBatch spriteBatch);
+        void applyEffect(SpriteBatch spriteBatch, Texture2D predraw = null);
     }
 }

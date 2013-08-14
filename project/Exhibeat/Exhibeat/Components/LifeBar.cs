@@ -13,7 +13,7 @@ using Exhibeat.Shaders;
 
 namespace Exhibeat.Components
 {
-    class LifeBar : AComponent, ITimeEventReciever
+    class LifeBar : AComponent
     {
         private ContentManager content;
 
@@ -23,31 +23,23 @@ namespace Exhibeat.Components
         private Texture2D texture_bar;
 
         private Rectangle bar_dest;
+        private Rectangle bar_src;
+
+        private ScoreLogger scoreLogger;
 
         private float current_completion;
         private float     completion;
-        public float      Completion
-        {
-            get { return completion; }
-            set
-            {
-                if (value > 1.0f)
-                    completion = 1.0f;
-                else if (value < 0f)
-                    completion = 0f;
-                else
-                    completion = value;
-            }
-        }
 
         #region CONSTRUCTION
-        public LifeBar(ContentManager contentman, int x = 0, int y = 0)
+        public LifeBar(ContentManager contentman, ScoreLogger sl, int x = 0, int y = 0)
             : base()
         {
             content = contentman;
 
-            completion = 0.5f;
+            completion = sl.GetCurrentLife();
             current_completion = 0f;
+
+            scoreLogger = sl;
 
             position = new Vector2(x, y);
 
@@ -55,10 +47,14 @@ namespace Exhibeat.Components
             texture_bar = content.Load<Texture2D>("lifebar_bar");
             
             bar_dest = new Rectangle(0, 0, 0, 0);
+            bar_src = new Rectangle(0, 0, 0, 0);
+
             bar_dest.X = (int)position.X + (int)(0.01f * texture_base.Width);
+
+            bar_src.Y = 0;
             bar_dest.Y = (int)position.Y + (int)(0.01f * texture_base.Height);
-            bar_dest.Height = (int)(0.99f * texture_base.Height);
-            bar_dest.Width = (int)(current_completion * texture_base.Width);           
+            bar_dest.Height = (int)(0.95f * texture_base.Height);
+            bar_src.Height = (int)(0.99f * texture_bar.Height);         
         }
         #endregion
         #region COMPONENT OVERRIDE
@@ -70,37 +66,30 @@ namespace Exhibeat.Components
         public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(texture_base, position, Color.White);
-            spriteBatch.Draw(texture_bar, bar_dest, Color.Turquoise);
+            spriteBatch.Draw(texture_bar, bar_dest, bar_src, Color.Turquoise);
         }
 
         public override void Update(GameTime gameTime)
         {
+            completion = scoreLogger.GetCurrentLife();
+
             if (completion > current_completion)
             {
-                current_completion += 0.01f;
+                current_completion += 0.005f;
                 if (current_completion > completion)
                     current_completion = completion;
             }
             else if (completion < current_completion)
             {
-                current_completion -= 0.01f;
+                current_completion -= 0.005f;
                 if (current_completion < completion)
                     current_completion = completion;
             }
 
-            bar_dest.Width = (int)(current_completion * 0.99f * texture_base.Width);
+            bar_dest.Width = (int)(current_completion * 0.90f * texture_base.Width);
+            bar_src.Width = (int)(current_completion * 0.90f * texture_base.Width);
         }
 
         #endregion
-
-        public void NewSongEvent(songEvent ev, object param)
-        {
-            
-        }
-
-        public void NewUserEvent(userEvent ev, object param)
-        {
-
-        }
     }
 }
