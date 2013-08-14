@@ -42,6 +42,7 @@ namespace Exhibeat
 #if DEBUG
             fpsDisplay = new FPSDisplay(Content.Load<SpriteFont>("plain"));
 #endif
+            new Exhibeat_SongDirectory_Scan.ExhibeatDirectoryScan().ScanSongDirectory(ExhibeatSettings.ResourceFolder);
 
             base.Initialize();
         }
