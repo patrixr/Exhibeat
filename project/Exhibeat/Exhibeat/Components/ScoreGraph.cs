@@ -27,7 +27,7 @@ namespace Exhibeat.Components
             tex_bars = content.Load<Texture2D>("graphbars");
             tex_dot = content.Load<Texture2D>("square");
             width = tex_bars.Width;
-            height = tex_bars.Height + topOffset;
+            height = tex_bars.Height;
             dest = new Rectangle(x, y, width, height + topOffset);
 
             if (vals.Count <= width)
@@ -73,11 +73,11 @@ namespace Exhibeat.Components
             for (int i = 0; i < values.Count; i++)
             {
                 dot_dest.X = 10 + i;
-                dot_dest.Y = (int)(height - 15 - (values[i] * (height - 15))) + topOffset;
+                dot_dest.Y = (int)(height - (values[i] * (height))) + topOffset - 15;
                 dot_dest.Height = (int)(values[i] * height);
-                col.G = (byte)(((float)dot_dest.Height / (float)height) * (float)255);
-                col.B = (byte)(255 - (((float)dot_dest.Height / (float)height) * (float)255));
-                dot_dest.Height = tex_dot.Height;
+                col.B = (byte)(((float)dot_dest.Height / (float)height) * (float)255);
+                col.R = (byte)(255 - (((float)dot_dest.Height / (float)height) * (float)255));
+                //dot_dest.Height = tex_dot.Height;
                 spriteBatch.Draw(tex_dot, dot_dest, col);
             }
 
