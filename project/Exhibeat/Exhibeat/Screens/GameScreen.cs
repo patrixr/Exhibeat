@@ -114,6 +114,7 @@ namespace Exhibeat.Screens
             lifebar.Update(gameTime);
             grades.Update(gameTime);
             scoreLogger.Update(gameTime);
+            Console.WriteLine("Accuracy : " + scoreLogger.getAccuracy());
             //runner.Update(gameTime);
 
             base.Update(gameTime);

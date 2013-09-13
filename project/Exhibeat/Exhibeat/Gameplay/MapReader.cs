@@ -202,14 +202,14 @@ namespace Exhibeat.Gameplay
                         Note note = _displayedNoteQueues[key.pos][0];
                         int diff = Math.Abs(note.Offset - _currentPos);
                         Console.WriteLine(diff);
-                        if (diff <= 100)
+                        if (diff <= 54)
                             SendEvent(userEvent.NOTEVERYGOOD, new NoteEventParameter() { note = key.pos, delayms = diff });
-                        else if (diff <= 200)
+                        else if (diff <= 106)
                             SendEvent(userEvent.NOTEGOOD, new NoteEventParameter() { note = key.pos, delayms = diff });
-                        else if (diff <= 300)
+                        else if (diff <= 158)
                             SendEvent(userEvent.NOTENORMAL, new NoteEventParameter() { note = key.pos, delayms = diff });
-                        else if (diff <= 500)
-                            SendEvent(userEvent.NOTENORMAL, new NoteEventParameter() { note = key.pos, delayms = diff }); //FIX SHOULD BE NOTEBAD
+                     //   else if (diff <= 210)
+                       //     SendEvent(userEvent.NOTENORMAL, new NoteEventParameter() { note = key.pos, delayms = diff }); //FIX SHOULD BE NOTEBAD
                         else
                             SendEvent(userEvent.NOTEFAIL, new NoteEventParameter() { note = key.pos, delayms = diff });
                         _displayedNoteQueues[key.pos].RemoveAt(0);

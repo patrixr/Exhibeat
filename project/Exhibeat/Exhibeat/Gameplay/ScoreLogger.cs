@@ -104,5 +104,12 @@ namespace Exhibeat.Gameplay
             graphValues.Add(current_completion);
             elapsed_ms = 0;
         }
+
+        public double getAccuracy()
+        {
+           double accu = (50 * hitCounts[userEvent.NOTENORMAL] + 100 * hitCounts[userEvent.NOTEGOOD] + 300 * hitCounts[userEvent.NOTEVERYGOOD]);
+           accu = accu / ((hitCounts[userEvent.NOTEFAIL] + hitCounts[userEvent.NOTENORMAL] + hitCounts[userEvent.NOTEGOOD] + hitCounts[userEvent.NOTEVERYGOOD]) * 300);
+           return (accu * 100);
+        }
     }
 }
