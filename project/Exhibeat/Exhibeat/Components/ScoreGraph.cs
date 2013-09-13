@@ -20,14 +20,15 @@ namespace Exhibeat.Components
         private Texture2D tex_bars, tex_dot;
         private Rectangle dest;
         private RenderTarget2D graph = null;
+        private int topOffset = 50;
 
         public ScoreGraph(List<float> vals, ContentManager content, int x, int y)
         {
             tex_bars = content.Load<Texture2D>("graphbars");
             tex_dot = content.Load<Texture2D>("square");
             width = tex_bars.Width;
-            height = tex_bars.Height;
-            dest = new Rectangle(x, y, width, height);
+            height = tex_bars.Height + topOffset;
+            dest = new Rectangle(x, y, width, height + topOffset);
 
             if (vals.Count <= width)
                 values = vals;
@@ -43,6 +44,16 @@ namespace Exhibeat.Components
                 }
             }
 
+        }
+
+        public int getHeight()
+        {
+            return dest.Height;
+        }
+
+        public int getWidth()
+        {
+            return dest.Width;
         }
 
         private void generateGraph(SpriteBatch spriteBatch)
@@ -62,15 +73,15 @@ namespace Exhibeat.Components
             for (int i = 0; i < values.Count; i++)
             {
                 dot_dest.X = 10 + i;
-                dot_dest.Y = (int)(height - 20 - (values[i] * height));
+                dot_dest.Y = (int)(height - 15 - (values[i] * (height - 15))) + topOffset;
                 dot_dest.Height = (int)(values[i] * height);
-                col.B = (byte)(((float)dot_dest.Height / (float)height) * (float)255);
-                col.R = (byte)(255 - (((float)dot_dest.Height / (float)height) * (float)255));
+                col.G = (byte)(((float)dot_dest.Height / (float)height) * (float)255);
+                col.B = (byte)(255 - (((float)dot_dest.Height / (float)height) * (float)255));
                 dot_dest.Height = tex_dot.Height;
                 spriteBatch.Draw(tex_dot, dot_dest, col);
             }
 
-            spriteBatch.Draw(tex_bars, Vector2.Zero, Color.White);
+            spriteBatch.Draw(tex_bars, new Vector2(0, topOffset), Color.White);
             spriteBatch.End();
             spriteBatch.GraphicsDevice.SetRenderTarget(null);
             spriteBatch.Begin();
@@ -86,7 +97,7 @@ namespace Exhibeat.Components
         {
             if (graph == null)
             {
-                graph = new RenderTarget2D(spriteBatch.GraphicsDevice, width, height);
+                graph = new RenderTarget2D(spriteBatch.GraphicsDevice, width, height + topOffset);
                 if (graph == null)
                     return;
                 generateGraph(spriteBatch);

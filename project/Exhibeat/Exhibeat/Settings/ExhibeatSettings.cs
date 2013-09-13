@@ -28,7 +28,17 @@ namespace Exhibeat.Settings
         public static float TileGrowthStartScale = 1;
         public static int TileGrowthDuration = 700;
 
+        public static int ScoreScreenDuration = 10; // SECONDS
+
         public static int TimeElapsed { get; set; }
+
+
+        /**
+         *  PARAMETERS FOR SLIDING BACKGROUND
+         */
+        public static bool SlidingBackground = true;
+        public static bool SlidingBackgroundColorChange = true;
+
 
         public static string ResourceFolder = ".\\test\\";
 

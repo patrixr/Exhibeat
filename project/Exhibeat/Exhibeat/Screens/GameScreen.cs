@@ -13,6 +13,7 @@ using Exhibeat.Settings;
 using Exhibeat.Gameplay;
 using Exhibeat.Shaders;
 using Exhibeat.Rhythm;
+using Microsoft.Xna.Framework.Input;
 
 namespace Exhibeat.Screens
 {
@@ -31,12 +32,15 @@ namespace Exhibeat.Screens
         private ScrollingBackground scrollingbackground;
         private ScoreLogger scoreLogger;
 
+        // STATIC BACKGROUND
         private Texture2D background;
         private Rectangle background_dest;
-        //private AnimatedSprite runner;
+        // OR SLIDING BACKGROUND
+        private SlidingBackground slide_background;
 
         private MapReader mapReader;
         private MapPreview _mapPreview;
+        //private AnimatedSprite runner;
 
         public GameScreen(HumbleGame game)
             : base(game)
@@ -80,25 +84,30 @@ namespace Exhibeat.Screens
 
             //runner = new AnimatedSprite(Content.Load<Texture2D>("running-test"), Content.Load<SpriteSheet>("running-test-sheet"), new Vector2(100, 100), false);
             //runner.Position = new Vector2(0, 0/* ExhibeatSettings.WindowHeight - Content.Load<Texture2D>("running-test").Height / 2*/);
-
-            background = Content.Load<Texture2D>("wp_back");
-            background_dest = new Rectangle(0, 0, ExhibeatSettings.WindowWidth, ExhibeatSettings.WindowHeight);
+            if (ExhibeatSettings.SlidingBackground)
+                slide_background = new SlidingBackground(Content.Load<Texture2D>("wp_back"));
+            else
+            {
+                background_dest = new Rectangle(0, 0, ExhibeatSettings.WindowWidth, ExhibeatSettings.WindowHeight);
+                background = Content.Load<Texture2D>("wp_back");
+            }
 
             base.Initialize();
         }
 
-        int osef = 0;
         public override void Update(GameTime gameTime)
         {
             mapReader.Update(gameTime);
 
-            if (mapReader.getMapCompletion() >= 30)
+            if (mapReader.getMapCompletion() >= 100 || Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
                 mapReader.Stop();
                 ScreenManager.Singleton.popScreen();
                 ScreenManager.Singleton.pushScreen(new ScoreScreen(this.Game, scoreLogger));
             }
 
+            if (ExhibeatSettings.SlidingBackground)
+                slide_background.Update(gameTime);
             scrollingbackground.Update(gameTime);
             visualizer.Update(gameTime);
             pad.Update(gameTime);
@@ -139,25 +148,30 @@ namespace Exhibeat.Screens
             blurEffect.start();
             SpriteBatch.Begin();
 
-            SpriteBatch.Draw(background, background_dest, Color.White);
+            if (ExhibeatSettings.SlidingBackground)
+                slide_background.Draw(SpriteBatch);
+            else
+                SpriteBatch.Draw(background, background_dest, Color.White);
             scrollingbackground.Draw(SpriteBatch);
             visualizer.Draw(SpriteBatch);
 
             //pad.Draw(SpriteBatch);
-            //lifebar.Draw(SpriteBatch);
+            lifebar.Draw(SpriteBatch);
+            grades.Draw(SpriteBatch);
 
+          
             // SHADERS END
             SpriteBatch.End();
             blurEffect.applyEffect(SpriteBatch);
 
         
             SpriteBatch.Begin();
-            
+
             pad.Draw(SpriteBatch);
             lifebar.Draw(SpriteBatch);
             grades.Draw(SpriteBatch);
 
-            //visualizer.Draw(SpriteBatch);
+            
             //runner.Draw(SpriteBatch);
 
             SpriteBatch.End();

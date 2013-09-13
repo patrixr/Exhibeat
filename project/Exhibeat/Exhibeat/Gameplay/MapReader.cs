@@ -209,7 +209,7 @@ namespace Exhibeat.Gameplay
                         else if (diff <= 300)
                             SendEvent(userEvent.NOTENORMAL, new NoteEventParameter() { note = key.pos, delayms = diff });
                         else if (diff <= 500)
-                            SendEvent(userEvent.NOTEBAD, new NoteEventParameter() { note = key.pos, delayms = diff });
+                            SendEvent(userEvent.NOTENORMAL, new NoteEventParameter() { note = key.pos, delayms = diff }); //FIX SHOULD BE NOTEBAD
                         else
                             SendEvent(userEvent.NOTEFAIL, new NoteEventParameter() { note = key.pos, delayms = diff });
                         _displayedNoteQueues[key.pos].RemoveAt(0);

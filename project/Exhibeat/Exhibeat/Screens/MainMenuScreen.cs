@@ -48,7 +48,9 @@ namespace Exhibeat.Screens
         public override void Draw()
         {
             SpriteBatch.Begin();
+#if DEBUG
             SpriteBatch.DrawString(plainfont, "Menu Screen", new Vector2(0, 20), Color.White);
+#endif
             SpriteBatch.End();
 
             base.Draw();

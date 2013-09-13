@@ -28,6 +28,31 @@ namespace Exhibeat.Gameplay
             return hitCounts[ev];
         }
 
+        public String getGradeTextureName()
+        {
+            int totalHits = 0;
+            foreach (KeyValuePair<userEvent, int> kvp in hitCounts)
+                totalHits += kvp.Value;
+            float accuracy = totalHits;
+            accuracy -= (float)hitCounts[userEvent.NOTEFAIL];
+            accuracy -= (float)hitCounts[userEvent.NOTENORMAL] * 0.1f;
+            accuracy -= (float)hitCounts[userEvent.NOTEGOOD] * 0.01f;
+            accuracy -= (float)hitCounts[userEvent.NOTEBAD] * 0.2f;
+            accuracy -= (float)hitCounts[userEvent.NOTEVERYGOOD] * 0f;
+
+            float percent = (accuracy / totalHits);
+            if (percent == 100)
+                return "Sgrade";
+            if (percent > 90)
+                return "Agrade";
+            if (percent > 80)
+                return "Bgrade";
+            if (percent > 70)
+                return "Cgrade";
+            else
+                return "Dgrade";
+        }
+
         public List<float> GetGraphValues()
         {
             return graphValues;

@@ -39,7 +39,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\x86\Debug</OutputPath>
-    <DefineConstants>TRACE;DEBUG;WINDOWS</DefineConstants>
+    <DefineConstants>TRACE;WINDOWS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoStdLib>true</NoStdLib>
@@ -97,6 +97,7 @@
     <Compile Include="Components\NoteGradeDisplay.cs" />
     <Compile Include="Components\ScoreGraph.cs" />
     <Compile Include="Components\ScrollingBackground.cs" />
+    <Compile Include="Components\SlidingBackground.cs" />
     <Compile Include="Components\SpiningMenu\GSpiningItem.cs" />
     <Compile Include="Components\SpiningMenu\GSpiningMenu.cs" />
     <Compile Include="Components\SpiningMenu\Rectange.cs" />

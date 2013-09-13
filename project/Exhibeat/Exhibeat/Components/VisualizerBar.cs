@@ -133,7 +133,7 @@ namespace Exhibeat.Components
                 else if (col.B == 255 && col.R < 255 && col.G == 0)
                     col.R++;
                 else if (col.R == 255 && col.B > 0 && col.G == 0)
-                    col.B++;
+                    col.B--;
                 ColorUpdateTick = 0;
             }
         }
