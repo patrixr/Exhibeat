@@ -13,6 +13,8 @@ namespace Exhibeat.Gameplay
         private Dictionary<userEvent, int> hitCounts = new Dictionary<userEvent, int>();
         private float current_completion = 1f;
         private int elapsed_ms = 0;
+        private double score = 0;
+        private int combo = 0;
 
         public ScoreLogger()
         {
@@ -82,19 +84,48 @@ namespace Exhibeat.Gameplay
             }
         }
 
+
+        /*300 + RoundDown(combo / 10)*80
+         * 150 + RoundDown(combo / 10)*80
+         * 75 + RoundDown(combo / 10)*80
+         */
+
         public void NewUserEvent(userEvent ev, object param)
         {
             if (ev == userEvent.NOTEPRESSED || ev == userEvent.NOTERELEASED)
                 return;
             if (ev == userEvent.NOTEFAIL)
-                current_completion -= 0.01f;
+            {
+                current_completion -= 0.10f;
+                combo = 0;
+            }
             else if (ev == userEvent.NOTEGOOD)
+            {
                 current_completion += 0.015f;
+                if (combo < 100)
+                    score += ((300 + (combo / 10) * 80) / 2) / 2;
+                else
+                    score += 275;
+                combo++;
+            }
             else if (ev == userEvent.NOTENORMAL)
+            {
                 current_completion += 0.01f;
+                if (combo < 100)
+                    score += (300 + (combo / 10) * 80) / 2;
+                else
+                    score += 550;
+                combo++;
+            }
             else if (ev == userEvent.NOTEVERYGOOD)
+            {
                 current_completion += 0.02f;
-
+                if (combo < 100)
+                    score += 300 + (combo / 10) * 80;
+                else
+                    score += 1100;
+                combo++;
+            }
             if (current_completion > 1f)
                 current_completion = 1f;
             else if (current_completion < 0f)
@@ -110,6 +141,11 @@ namespace Exhibeat.Gameplay
            double accu = (50 * hitCounts[userEvent.NOTENORMAL] + 100 * hitCounts[userEvent.NOTEGOOD] + 300 * hitCounts[userEvent.NOTEVERYGOOD]);
            accu = accu / ((hitCounts[userEvent.NOTEFAIL] + hitCounts[userEvent.NOTENORMAL] + hitCounts[userEvent.NOTEGOOD] + hitCounts[userEvent.NOTEVERYGOOD]) * 300);
            return (accu * 100);
+        }
+
+        public double getScore()
+        {
+            return score;
         }
     }
 }

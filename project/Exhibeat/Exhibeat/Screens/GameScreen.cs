@@ -114,7 +114,7 @@ namespace Exhibeat.Screens
             lifebar.Update(gameTime);
             grades.Update(gameTime);
             scoreLogger.Update(gameTime);
-            Console.WriteLine("Accuracy : " + scoreLogger.getAccuracy());
+            Console.WriteLine(scoreLogger.getScore());
             //runner.Update(gameTime);
 
             base.Update(gameTime);
@@ -140,7 +140,6 @@ namespace Exhibeat.Screens
 
             SpriteBatch.Draw(background, background_dest, Color.White);
             SpriteBatch.End();*/
-
 
             ////SHADERS START
             if (blurEffect == null)
@@ -174,6 +173,17 @@ namespace Exhibeat.Screens
 
             
             //runner.Draw(SpriteBatch);
+
+            SpriteBatch.End();
+
+            SpriteFont font = this.Content.Load<SpriteFont>("scorefont");
+            int stats_y = (int)(0.1f * (float)ExhibeatSettings.WindowHeight);
+            int stats_x = ExhibeatSettings.WindowWidth / 2 + 250;
+            Vector2 scoreDest = new Vector2(stats_x, stats_y);
+
+            SpriteBatch.Begin();
+
+            SpriteBatch.DrawString(font, "Score : " + scoreLogger.getScore(), new Vector2(scoreDest.X - 100, 35), Color.White);
 
             SpriteBatch.End();
             base.Draw();

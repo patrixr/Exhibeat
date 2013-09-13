@@ -93,6 +93,7 @@ namespace Exhibeat.Screens
             SpriteBatch.DrawString(font, logger.GetHitCount(userEvent.NOTEGOOD) + "x", new Vector2(excellentDest.X - 100, perfectDest.Y), Color.White);
             SpriteBatch.DrawString(font, logger.GetHitCount(userEvent.NOTENORMAL) + "x", new Vector2(excellentDest.X - 100, greatDest.Y), Color.White);
             SpriteBatch.DrawString(font, logger.GetHitCount(userEvent.NOTEFAIL) + "x", new Vector2(excellentDest.X - 100, missDest.Y), Color.White);
+            SpriteBatch.DrawString(font, "Score : " + logger.getScore(), new Vector2(excellentDest.X - 100, missDest.Y + 100), Color.White);
             SpriteBatch.DrawString(font, "Accuracy : " + logger.getAccuracy().ToString("f") + " %", new Vector2(excellentDest.X - 100, missDest.Y + 200), Color.White);
 
             SpriteBatch.Draw(gradeTex, gradeDest, Color.White);
