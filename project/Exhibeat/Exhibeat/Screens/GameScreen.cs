@@ -95,10 +95,14 @@ namespace Exhibeat.Screens
                 background_dest = new Rectangle(0, 0, ExhibeatSettings.WindowWidth, ExhibeatSettings.WindowHeight);
                 background = Content.Load<Texture2D>("wp_back");
             }
+
+            //
+            // SCORE
+            //
             int width = ExhibeatSettings.WindowWidth - (30*8 + 150);
             for (int i = 0 ; i < 8 ; i++)
             {
-                scoreDigitLocation.Add(new Rectangle(width, 70, 30, 45));
+                scoreDigitLocation.Add(new Rectangle(width, 30, 30, 45));
                 width += 40;
             }
             
@@ -151,6 +155,41 @@ namespace Exhibeat.Screens
             base.HandleInput();
         }
 
+        private void DrawScore(bool colorChange = true)
+        {
+            int stats_y = (int)(0.1f * (float)ExhibeatSettings.WindowHeight);
+            int stats_x = ExhibeatSettings.WindowWidth / 2 + 250;
+            Vector2 scoreDest = new Vector2(stats_x, stats_y);
+
+            //DISPLAY NASTY SCORE
+           
+            int c = scoreLogger.getScore().ToString().Length - 1;
+
+            Color col;
+            if (colorChange)
+            {
+                col = slide_background.getCurrentColor();
+                col.G = 0;
+            }
+            else
+            {
+                col = Color.White;
+            }
+
+            int i = 0;
+            foreach (char digit in scoreLogger.getScore().ToString())
+            {
+                SpriteBatch.Draw(scoreDigits[digit], scoreDigitLocation[7 - c + i], col);
+                i++;
+            }
+            c++;
+            while (c < 8)
+            {
+                SpriteBatch.Draw(scoreDigits['0'], scoreDigitLocation[7 - c], col);
+                c++;
+            }
+        }
+
         public override void Draw()
         {
 
@@ -179,6 +218,7 @@ namespace Exhibeat.Screens
             //pad.Draw(SpriteBatch);
             lifebar.Draw(SpriteBatch);
             grades.Draw(SpriteBatch);
+            DrawScore(false);
 
           
             // SHADERS END
@@ -191,34 +231,13 @@ namespace Exhibeat.Screens
             pad.Draw(SpriteBatch);
             lifebar.Draw(SpriteBatch);
             grades.Draw(SpriteBatch);
+            DrawScore();
 
             
             //runner.Draw(SpriteBatch);
 
             SpriteBatch.End();
 
-            SpriteFont font = this.Content.Load<SpriteFont>("scorefont");
-            int stats_y = (int)(0.1f * (float)ExhibeatSettings.WindowHeight);
-            int stats_x = ExhibeatSettings.WindowWidth / 2 + 250;
-            Vector2 scoreDest = new Vector2(stats_x, stats_y);
-
-            //DISPLAY NASTY SCORE
-            SpriteBatch.Begin();
-            int c = scoreLogger.getScore().ToString().Length - 1;
-
-            int i = 0;
-           foreach (char digit in scoreLogger.getScore().ToString())
-            {
-               SpriteBatch.Draw(scoreDigits[digit], scoreDigitLocation[7 - c + i], Color.White);
-               i++;
-            }
-           c++;
-           while (c < 8)
-           {
-               SpriteBatch.Draw(scoreDigits['0'], scoreDigitLocation[7 - c], Color.White);
-               c++;
-           }
-            SpriteBatch.End();
             base.Draw();
         }
 

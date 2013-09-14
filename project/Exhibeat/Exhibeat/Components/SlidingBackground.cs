@@ -71,6 +71,11 @@ namespace Exhibeat.Components
             elapsed_ms = 0;
         }
 
+        public Color getCurrentColor()
+        {
+            return col;
+        }
+
         private void UpdateColor(GameTime gameTime)
         {
             ColorUpdateTick += gameTime.ElapsedGameTime.Milliseconds;
