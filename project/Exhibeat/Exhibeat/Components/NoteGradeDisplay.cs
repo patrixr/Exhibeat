@@ -39,7 +39,12 @@ namespace Exhibeat.Components
                 {
                     RandomParticleGenerator pg = new RandomParticleGenerator(true, 0.1f, 5f, 1000);
                  
-                    pg.Textures.Add(content.Load<Texture2D>("square"));
+                    pg.Textures.Add(content.Load<Texture2D>("particles/1"));
+                    pg.Textures.Add(content.Load<Texture2D>("particles/2"));
+                    pg.Textures.Add(content.Load<Texture2D>("particles/3"));
+                    pg.Textures.Add(content.Load<Texture2D>("particles/4"));
+                    pg.Textures.Add(content.Load<Texture2D>("particles/5"));
+                    pg.Textures.Add(content.Load<Texture2D>("particles/6"));
                     
                    
                     particle_emitter = new ParticleEmitter(pg, new Vector2(ExhibeatSettings.WindowWidth - texture.Width, y));
