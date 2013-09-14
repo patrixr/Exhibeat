@@ -169,7 +169,8 @@ namespace Exhibeat.Screens
             if (colorChange)
             {
                 col = slide_background.getCurrentColor();
-                col.G = 0;
+                col.G = 255;
+                col.R = 255;
             }
             else
             {
@@ -231,7 +232,7 @@ namespace Exhibeat.Screens
             pad.Draw(SpriteBatch);
             lifebar.Draw(SpriteBatch);
             grades.Draw(SpriteBatch);
-            DrawScore();
+            DrawScore(false);
 
             
             //runner.Draw(SpriteBatch);
