@@ -38,6 +38,10 @@ namespace Exhibeat.Screens
         // OR SLIDING BACKGROUND
         private SlidingBackground slide_background;
 
+        //NASTY SCORE
+        private Dictionary<char, Texture2D> scoreDigits = new Dictionary<char,Texture2D>();
+        private List<Rectangle> scoreDigitLocation = new List<Rectangle>();
+
         private MapReader mapReader;
         private MapPreview _mapPreview;
         //private AnimatedSprite runner;
@@ -91,7 +95,24 @@ namespace Exhibeat.Screens
                 background_dest = new Rectangle(0, 0, ExhibeatSettings.WindowWidth, ExhibeatSettings.WindowHeight);
                 background = Content.Load<Texture2D>("wp_back");
             }
-
+            int width = ExhibeatSettings.WindowWidth - (30*8 + 150);
+            for (int i = 0 ; i < 8 ; i++)
+            {
+                scoreDigitLocation.Add(new Rectangle(width, 70, 30, 45));
+                width += 40;
+            }
+            
+            //But baby...
+            scoreDigits.Add('0', Content.Load<Texture2D>("default-0"));
+            scoreDigits.Add('1', Content.Load<Texture2D>("default-1"));
+            scoreDigits.Add('2', Content.Load<Texture2D>("default-2"));
+            scoreDigits.Add('3', Content.Load<Texture2D>("default-3"));
+            scoreDigits.Add('4', Content.Load<Texture2D>("default-4"));
+            scoreDigits.Add('5', Content.Load<Texture2D>("default-5"));
+            scoreDigits.Add('6', Content.Load<Texture2D>("default-6"));
+            scoreDigits.Add('7', Content.Load<Texture2D>("default-7"));
+            scoreDigits.Add('8', Content.Load<Texture2D>("default-8"));
+            scoreDigits.Add('9', Content.Load<Texture2D>("default-9"));
             base.Initialize();
         }
 
@@ -181,10 +202,22 @@ namespace Exhibeat.Screens
             int stats_x = ExhibeatSettings.WindowWidth / 2 + 250;
             Vector2 scoreDest = new Vector2(stats_x, stats_y);
 
+            //DISPLAY NASTY SCORE
             SpriteBatch.Begin();
+            int c = scoreLogger.getScore().ToString().Length - 1;
 
-            SpriteBatch.DrawString(font, "Score : " + scoreLogger.getScore(), new Vector2(scoreDest.X - 100, 35), Color.White);
-
+            int i = 0;
+           foreach (char digit in scoreLogger.getScore().ToString())
+            {
+               SpriteBatch.Draw(scoreDigits[digit], scoreDigitLocation[7 - c + i], Color.White);
+               i++;
+            }
+           c++;
+           while (c < 8)
+           {
+               SpriteBatch.Draw(scoreDigits['0'], scoreDigitLocation[7 - c], Color.White);
+               c++;
+           }
             SpriteBatch.End();
             base.Draw();
         }
