@@ -138,7 +138,10 @@ namespace Exhibeat.Gameplay
 
         public double getAccuracy()
         {
+
            double accu = (50 * hitCounts[userEvent.NOTENORMAL] + 100 * hitCounts[userEvent.NOTEGOOD] + 300 * hitCounts[userEvent.NOTEVERYGOOD]);
+           if (accu == 0)
+               return 0.0;
            accu = accu / ((hitCounts[userEvent.NOTEFAIL] + hitCounts[userEvent.NOTENORMAL] + hitCounts[userEvent.NOTEGOOD] + hitCounts[userEvent.NOTEVERYGOOD]) * 300);
            return (accu * 100);
         }
