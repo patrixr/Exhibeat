@@ -52,13 +52,37 @@ namespace Exhibeat.Components.SpiningMenu
         public override void Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
-            _color = _isSelected ? new Color(255,255,255) : new Color(255,255,255, 0.1f);
+            _color = _isSelected ? new Color(255,255,255) : new Color(255,255,255, 0.05f);
             spriteBatch.Draw(_itemTexture, _destRect, null, _color, 0, new Vector2(_itemTexture.Width / 2, _itemTexture.Height / 2), SpriteEffects.None, 0);
 
-            Vector2 textPos = new Vector2(_position.X - _itemTexture.Width / 6, _position.Y - _itemTexture.Height / 5);
-            spriteBatch.DrawString(_font, _item.title, textPos, Color.Black);
-            spriteBatch.DrawString(_font, _item.subTitle, new Vector2(textPos.X, textPos.Y + _font.MeasureString("B").Y), Color.Chocolate);
+            Vector2 textPos = new Vector2(_position.X - _itemTexture.Width / 6, _position.Y - _itemTexture.Height / 6);
+            String title, subTitle;
+
+            if (_item.title.Length * _font.MeasureString("B").X > (_itemTexture.Width / 2) - 80)
+            {
+                title = _item.title.Substring(0, ((_itemTexture.Width / 2) - 80) / (int)_font.MeasureString("B").X);
+            }
+            else
+            {
+                title = _item.title;
+            }
+
+            if (_item.subTitle.Length * _font.MeasureString("B").X > (_itemTexture.Width / 2) - 80)
+            {
+                subTitle = _item.subTitle.Substring(0, ((_itemTexture.Width / 2) - 80) / (int)_font.MeasureString("B").X);
+            }
+            else
+            {
+                subTitle = _item.subTitle;
+            }
+            spriteBatch.DrawString(_font, title, textPos, Color.Black);
+            spriteBatch.DrawString(_font, subTitle, new Vector2(textPos.X, textPos.Y + _font.MeasureString("B").Y), Color.Chocolate);
             spriteBatch.End();
+
+            if (_isSelected)
+            {
+                _menu.showSelectedSongInfo(_item);
+            }
         }
 
         public override void Update(Microsoft.Xna.Framework.GameTime gameTime)

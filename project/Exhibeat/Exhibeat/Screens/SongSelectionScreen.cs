@@ -39,9 +39,11 @@ namespace Exhibeat.Screens
         public SpiningItem getItemFromPreview(MapPreview map)
         {
             SpiningItem item = new SpiningItem();
+
             item.title = map.Title;
             item.subTitle = map.Artist;
             item.text = map.Difficulty.ToString();
+
             _songList.Add(map);
             return item;
         }
@@ -53,7 +55,7 @@ namespace Exhibeat.Screens
             _menu.setCenterMenuPosition(new Vector2(_game.GraphicsDevice.Viewport.Width, _game.GraphicsDevice.Viewport.Height / 2));
             _menu.setMenuScale(0.5f);
 
-            _background = _game.Content.Load<Texture2D>("SongSelectionScreen\\background - Copy");
+            _background = _game.Content.Load<Texture2D>("SongSelectionScreen\\background");
             _title = _game.Content.Load<Texture2D>("SongSelectionScreen\\Title");
 
             _songList = new List<MapPreview>();

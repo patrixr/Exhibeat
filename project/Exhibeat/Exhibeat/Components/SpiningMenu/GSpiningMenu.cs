@@ -38,9 +38,10 @@ namespace Exhibeat.Components.SpiningMenu
         private KeyboardState _currentKeyboardState;
         private KeyboardState _previousKeyboardState;
 
-        private Texture2D _selectedItemTexture = null;
-        private Texture2D _itemTexture = null;
+        public Texture2D _selectedItemTexture = null;
+        public Texture2D _itemTexture = null;
         private Texture2D _centerMenuTexture = null; //Color(143, 205, 242)
+        private Texture2D _square = null;
 
         private SpriteFont _exhibeatFont = null;
 
@@ -61,8 +62,9 @@ namespace Exhibeat.Components.SpiningMenu
             this._contentManager = content;
 
             _selectedItemTexture = _contentManager.Load<Texture2D>("SongSelectionScreen\\SelectedSong");
-            _itemTexture = _contentManager.Load<Texture2D>("SongSelectionScreen\\Song");
+            _itemTexture = _contentManager.Load<Texture2D>("SongSelectionScreen\\UnSelectedSong");
             _centerMenuTexture = _contentManager.Load<Texture2D>("SongSelectionScreen\\HexSong");
+            _square = _contentManager.Load<Texture2D>("SongSelectionScreen\\square");
             _exhibeatFont = _contentManager.Load<SpriteFont>("exhibeatFont");
 
             for (int i = 0; i < MAX_GITEM_ON_DISPLAY; i++)
@@ -89,12 +91,26 @@ namespace Exhibeat.Components.SpiningMenu
             spriteBatch.Draw(_centerMenuTexture, new Vector2(_position.X, _position.Y), null, Color.White, 0f, new Vector2(_centerMenuTexture.Width / 2, _centerMenuTexture.Height / 2), this._scale, SpriteEffects.None, 0f);
             spriteBatch.End();
         }
+
+        public void showSelectedSongInfo(SpiningItem item)
+        {
+            Vector2 textPos = new Vector2(100, (ExhibeatSettings.WindowHeight - _square.Height) + 100);
+            _spriteBatch.Begin();
+            _spriteBatch.DrawString(_exhibeatFont, item.title, textPos, Color.Chocolate);
+            _spriteBatch.DrawString(_exhibeatFont, item.subTitle, new Vector2(textPos.X, textPos.Y + _exhibeatFont.MeasureString("B").Y), Color.Chocolate);
+            _spriteBatch.DrawString(_exhibeatFont, item.text, new Vector2(textPos.X, textPos.Y + _exhibeatFont.MeasureString("B").Y*2), Color.Chocolate);
+            _spriteBatch.End();
+        }
+
         public void drawItems(SpriteBatch spriteBatch)
         {
             foreach (GSpiningItem gItem in _gSpiningItemList)
             {
                 gItem.Draw(spriteBatch);
-            } 
+            }
+            spriteBatch.Begin();
+            spriteBatch.Draw(_square, new Vector2(0, ExhibeatSettings.WindowHeight - _square.Height), Color.Wheat);
+            spriteBatch.End();
         }
 
         public override void Update(GameTime gameTime)
