@@ -18,25 +18,18 @@ Content\score_perfect.xnb
 Content\Press Start.xnb
 Content\Title Logo.xnb
 Content\Title screenbg2.xnb
-Content\SongSelectionScreen\Background.xnb
 Content\SongSelectionScreen\Difficulty.xnb
 Content\SongSelectionScreen\HexSong.xnb
-Content\SongSelectionScreen\SelectedSong.xnb
 Content\wp_back.xnb
 Content\wp_front.xnb
 Content\wp_back2.xnb
 Content\wp_back3.xnb
 Content\graphbars.xnb
-Content\SongSelectionScreen\Title.xnb
 Content\Agrade.xnb
 Content\Bgrade.xnb
 Content\Cgrade.xnb
 Content\Dgrade.xnb
 Content\Sgrade.xnb
-Content\tile_animation_test_sheet.xnb
-Content\running-test-sheet.xnb
-Content\GaussianBlur.xnb
-Content\GaussianBlur2.xnb
 Content\default-0.xnb
 Content\default-1.xnb
 Content\default-2.xnb
@@ -53,10 +46,12 @@ Content\particles\3.xnb
 Content\particles\4.xnb
 Content\particles\5.xnb
 Content\particles\6.xnb
-Content\SongSelectionScreen\background - Copy-old.xnb
-Content\SongSelectionScreen\Background-old.xnb
-Content\SongSelectionScreen\Title-old.xnb
-Content\SongSelectionScreen\SelectedSong-old.xnb
-Content\SongSelectionScreen\Song-old.xnb
+Content\SongSelectionScreen\background.xnb
+Content\SongSelectionScreen\Title.xnb
+Content\SongSelectionScreen\SelectedSong.xnb
 Content\SongSelectionScreen\UnSelectedSong.xnb
 Content\SongSelectionScreen\square.xnb
+Content\tile_animation_test_sheet.xnb
+Content\running-test-sheet.xnb
+Content\GaussianBlur.xnb
+Content\GaussianBlur2.xnb
