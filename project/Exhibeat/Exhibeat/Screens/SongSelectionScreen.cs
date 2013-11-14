@@ -85,6 +85,7 @@ namespace Exhibeat.Screens
         public override void HandleInput()
         {
             _menu.processEvent();
+            _menu.processEventGamePad();
             base.HandleInput();
         }
 

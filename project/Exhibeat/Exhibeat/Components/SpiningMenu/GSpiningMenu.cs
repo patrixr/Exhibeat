@@ -32,11 +32,18 @@ namespace Exhibeat.Components.SpiningMenu
         private event Action DownPressed = null;
         private event Action SpacePressed = null;
         private event Action EnterPressed = null;
+        private event Action RightShoulderPressed = null;
+        private event Action StartPressed = null;
+        private event Action LeftShoulderPressed = null;
 
         private Keys[] keys = { Keys.Up, Keys.Down, Keys.Space, Keys.Enter };
-        
+        private Buttons[] buttons = { Buttons.RightShoulder, Buttons.Start, Buttons.LeftShoulder };
         private KeyboardState _currentKeyboardState;
         private KeyboardState _previousKeyboardState;
+
+        // GamePad
+        private GamePadState _currentGamePadState;
+        private GamePadState _previousGamePadState;
 
         public Texture2D _selectedItemTexture = null;
         public Texture2D _itemTexture = null;
@@ -60,6 +67,8 @@ namespace Exhibeat.Components.SpiningMenu
             this._parentScreen = parentScreen;
             this._spriteBatch = spriteBatch;
             this._contentManager = content;
+
+           
 
             _selectedItemTexture = _contentManager.Load<Texture2D>("SongSelectionScreen\\SelectedSong");
             _itemTexture = _contentManager.Load<Texture2D>("SongSelectionScreen\\UnSelectedSong");
@@ -204,6 +213,16 @@ namespace Exhibeat.Components.SpiningMenu
                     RaiseEventByName(key.ToString() + "Pressed");
             _previousKeyboardState = _currentKeyboardState;
         }
+        public void processEventGamePad()
+        {
+            _currentGamePadState = GamePad.GetState(PlayerIndex.One);
+
+            foreach (Buttons button in buttons)
+                if (_currentGamePadState.IsButtonDown(button) && _previousGamePadState.IsButtonDown(button))
+                    RaiseEventByName(button.ToString() + "Pressed");
+
+            _previousGamePadState = _currentGamePadState;
+        }
         private void initializeKeyEvent()
         {
             _currentItemIdx = 0;
@@ -211,6 +230,11 @@ namespace Exhibeat.Components.SpiningMenu
             DownPressed += new Action(handleEventKeyDown);
             SpacePressed += new Action(handleEventKeySpace);
             EnterPressed += new Action(handleEventKeyEnter);
+            RightShoulderPressed += new Action(handleEventPadRightShoulder);
+            StartPressed += new Action(handleEventPadStart);
+            LeftShoulderPressed += new Action(handleEventPadLeftShoulder);
+
+            _previousGamePadState = GamePad.GetState(PlayerIndex.One);
             _currentKeyboardState = _previousKeyboardState = Keyboard.GetState();
         }
         private void RaiseEventByName(string eventName)
@@ -219,6 +243,18 @@ namespace Exhibeat.Components.SpiningMenu
              if (eventDelegate != null)
                 foreach (var handler in eventDelegate.GetInvocationList())
                     handler.Method.Invoke(handler.Target, null);
+        }
+        private void handleEventPadRightShoulder()
+        {
+            handleEventKeyUp();
+        }
+        private void handleEventPadStart()
+        {
+            handleEventKeySpace();
+        }
+        private void handleEventPadLeftShoulder()
+        {
+            handleEventKeyDown();
         }
 
         private void handleEventKeyUp()

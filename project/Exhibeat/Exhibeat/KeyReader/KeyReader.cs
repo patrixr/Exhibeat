@@ -33,10 +33,9 @@ namespace ExhiBeat.KeyReader
             key.type = type;
             _keyEvents.Add(key);
         }
-
+        
         private void checkGamePadKey(GamePadState state, Buttons butt, int pos)
         {
-            // Console.WriteLine("Check");
             if (state.IsButtonDown(butt))
             {
                 if (_curState[pos] != true)
@@ -74,24 +73,30 @@ namespace ExhiBeat.KeyReader
         
         private void refresh()
         {
-            KeyboardState state = Keyboard.GetState();
+            if (previousGamePadState.IsConnected)
+            {
 
-            checkKey(state, Keys.S, 3);
-            checkKey(state, Keys.E, 1);
-            checkKey(state, Keys.D, 4);
-            checkKey(state, Keys.X, 6);
-            checkKey(state, Keys.Z, 5);
-            checkKey(state, Keys.A, 2);
-            checkKey(state, Keys.W, 0);
+                GamePadState state2 = GamePad.GetState(PlayerIndex.One);
+                checkGamePadKey(state2, Buttons.B, 6);
+                checkGamePadKey(state2, Buttons.A, 5);
+                checkGamePadKey(state2, Buttons.RightShoulder, 4);
+                checkGamePadKey(state2, Buttons.Start, 3);
+                checkGamePadKey(state2, Buttons.LeftShoulder, 2);
+                checkGamePadKey(state2, Buttons.Y, 1);
+                checkGamePadKey(state2, Buttons.X, 0);
+            }
+            else
+            {
+                KeyboardState state = Keyboard.GetState();
 
-            /*GamePadState state2 = GamePad.GetState(PlayerIndex.One);
-            checkGamePadKey(state2, Buttons.B, 6);
-            checkGamePadKey(state2, Buttons.A, 5);
-            checkGamePadKey(state2, Buttons.RightShoulder, 4);
-            checkGamePadKey(state2, Buttons.Start, 3);
-            checkGamePadKey(state2, Buttons.LeftShoulder, 2);
-            checkGamePadKey(state2, Buttons.Y, 1);
-            checkGamePadKey(state2, Buttons.X, 0);*/
+                checkKey(state, Keys.S, 3);
+                checkKey(state, Keys.E, 1);
+                checkKey(state, Keys.D, 4);
+                checkKey(state, Keys.X, 6);
+                checkKey(state, Keys.Z, 5);
+                checkKey(state, Keys.A, 2);
+                checkKey(state, Keys.W, 0);
+            }
         }
 
         public Key getNextKeyEvent()
