@@ -40,7 +40,7 @@ namespace Exhibeat.Settings
         public static bool SlidingBackgroundColorChange = true;
 
 
-        public static string ResourceFolder = "C:\\Users\\julie_000\\Desktop\\test\\";
+        public static string ResourceFolder = "E:\\Nashmun\\Desktop\\test\\";
 
         private static IAudioManager audioManager = null;
 

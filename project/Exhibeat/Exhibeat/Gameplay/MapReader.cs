@@ -9,7 +9,7 @@ using Exhibeat.Settings;
 using ExhiBeat.KeyReader;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework;
-using Exhibeat.Settings;
+using Exhibeat.Screens;
 
 /// <summary>
 /// en attendant la class
@@ -49,6 +49,8 @@ namespace Exhibeat.Gameplay
         protected IAudioManager _audioManager;
         protected int           _songIndex;
         protected int           _songIndex2;
+        private   int           comboBreakIdx;
+        private   int           clapSongIdx;
 
         protected bool _songPlaying = false;
         protected bool _notePlayed = false;
@@ -73,6 +75,8 @@ namespace Exhibeat.Gameplay
         {
             _parser = new EXParser();
             _audioManager = ExhibeatSettings.GetAudioManager();
+            comboBreakIdx = _audioManager.open(ExhibeatSettings.ResourceFolder + "combobreak.wav");
+            clapSongIdx = _audioManager.open(ExhibeatSettings.ResourceFolder + "clap.wav");
         }
 
         public bool Read(string songFilePath)
@@ -147,6 +151,11 @@ namespace Exhibeat.Gameplay
                         // IS THE NOTE PAST AND FAILED ?
                         if ((note.Offset < _currentPos) && diff > 100)
                         {
+                            if (GameScreen.missSound)
+                            {
+                                ExhibeatSettings.GetAudioManager().stop(comboBreakIdx);
+                                ExhibeatSettings.GetAudioManager().play(comboBreakIdx);
+                            }
                             SendEvent(userEvent.NOTEFAIL, new NoteEventParameter() { note = note.Button, delayms = diff });
                             note_queue.RemoveAt(0);
                             continue;
@@ -193,6 +202,8 @@ namespace Exhibeat.Gameplay
             {
                 if (key.type == keyType.pressed)
                 {
+                    ExhibeatSettings.GetAudioManager().stop(clapSongIdx);
+                    ExhibeatSettings.GetAudioManager().play(clapSongIdx);
                     _currentPos = (int)_audioManager.getCurrentPosMs(_songIndex);
                     if (_displayedNoteQueues[key.pos].Count == 0)
                         SendEvent(userEvent.NOTEPRESSED, new NoteEventParameter() { note = key.pos, delayms = 0 });
@@ -208,8 +219,6 @@ namespace Exhibeat.Gameplay
                             SendEvent(userEvent.NOTEGOOD, new NoteEventParameter() { note = key.pos, delayms = diff });
                         else if (diff <= 158)
                             SendEvent(userEvent.NOTENORMAL, new NoteEventParameter() { note = key.pos, delayms = diff });
-                     //   else if (diff <= 210)
-                       //     SendEvent(userEvent.NOTENORMAL, new NoteEventParameter() { note = key.pos, delayms = diff }); //FIX SHOULD BE NOTEBAD
                         else
                             SendEvent(userEvent.NOTEFAIL, new NoteEventParameter() { note = key.pos, delayms = diff });
                         _displayedNoteQueues[key.pos].RemoveAt(0);

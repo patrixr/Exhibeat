@@ -131,7 +131,7 @@ namespace Exhibeat.Components
             press_origin = new Vector2(texture_press.Width / 2, texture_press.Height / 2);
             notes = new List<VisualNote>();
 
-            clapSongIdx = ExhibeatSettings.GetAudioManager().open(ExhibeatSettings.ResourceFolder + "taiko-normal-hitclap.wav");
+           // clapSongIdx = ExhibeatSettings.GetAudioManager().open(ExhibeatSettings.ResourceFolder + "clap.wav");
             blurEffect = null;
         }
 
@@ -177,8 +177,6 @@ namespace Exhibeat.Components
                 if (note.time_left <= 0)
                 {
                     notes.Remove(note);
-                    ExhibeatSettings.GetAudioManager().stop(clapSongIdx);
-                    ExhibeatSettings.GetAudioManager().play(clapSongIdx);
                     //Press();
                     i--;
                 }

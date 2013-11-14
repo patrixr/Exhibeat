@@ -24,6 +24,7 @@ namespace Exhibeat.Screens
     /// </summary>
     class GameScreen : Screen, ITimeEventReciever
     {
+        public static bool missSound = false;
         private HexPad pad;
         private Visualizer visualizer;
         private LifeBar lifebar;
@@ -41,6 +42,10 @@ namespace Exhibeat.Screens
         //NASTY SCORE
         private Dictionary<char, Texture2D> scoreDigits = new Dictionary<char,Texture2D>();
         private List<Rectangle> scoreDigitLocation = new List<Rectangle>();
+
+        //NASTY COMBO
+        private List<Rectangle> comboDigitLocation = new List<Rectangle>();
+        private Texture2D comboDigit;
 
         private MapReader mapReader;
         private MapPreview _mapPreview;
@@ -105,7 +110,15 @@ namespace Exhibeat.Screens
                 scoreDigitLocation.Add(new Rectangle(width, 30, 30, 45));
                 width += 40;
             }
-            
+
+            int comboWidth = -10;
+            for (int i = 0; i < 4; i++)
+            {
+                comboDigitLocation.Add(new Rectangle(comboWidth, ExhibeatSettings.WindowHeight - 60, 30, 45));
+                comboWidth += 40;
+            }
+
+
             //But baby...
             scoreDigits.Add('0', Content.Load<Texture2D>("default-0"));
             scoreDigits.Add('1', Content.Load<Texture2D>("default-1"));
@@ -117,11 +130,16 @@ namespace Exhibeat.Screens
             scoreDigits.Add('7', Content.Load<Texture2D>("default-7"));
             scoreDigits.Add('8', Content.Load<Texture2D>("default-8"));
             scoreDigits.Add('9', Content.Load<Texture2D>("default-9"));
+            comboDigit = Content.Load<Texture2D>("score-x");
             base.Initialize();
         }
 
         public override void Update(GameTime gameTime)
         {
+            if (scoreLogger.getCombo() > 15)
+                missSound = true;
+            else
+                missSound = false;
             mapReader.Update(gameTime);
 
             if (mapReader.getMapCompletion() >= 100 || Keyboard.GetState().IsKeyDown(Keys.Escape))
@@ -141,7 +159,6 @@ namespace Exhibeat.Screens
             scoreLogger.Update(gameTime);
             Console.WriteLine(scoreLogger.getScore());
             //runner.Update(gameTime);
-
             base.Update(gameTime);
         }
 
@@ -161,9 +178,10 @@ namespace Exhibeat.Screens
             int stats_x = ExhibeatSettings.WindowWidth / 2 + 250;
             Vector2 scoreDest = new Vector2(stats_x, stats_y);
 
-            //DISPLAY NASTY SCORE
+            //DISPLAY NASTY SCORE AND COMBO
            
             int c = scoreLogger.getScore().ToString().Length - 1;
+            int cc = scoreLogger.getCombo().ToString().Length - 1;
 
             Color col;
             if (colorChange)
@@ -188,6 +206,16 @@ namespace Exhibeat.Screens
             {
                 SpriteBatch.Draw(scoreDigits['0'], scoreDigitLocation[7 - c], col);
                 c++;
+            }
+            if (scoreLogger.getCombo() >= 8)
+            {
+                i = 0;
+                foreach (char digit in scoreLogger.getCombo().ToString())
+                {
+                    SpriteBatch.Draw(scoreDigits[digit], comboDigitLocation[2 - cc + i], col);
+                    i++;
+                }
+                SpriteBatch.Draw(comboDigit, comboDigitLocation.Last(), col);
             }
         }
 

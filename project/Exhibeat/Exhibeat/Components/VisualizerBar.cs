@@ -27,7 +27,7 @@ namespace Exhibeat.Components
         private int X = 0;
         private int ElapsedTime = 0;
         private int ColorUpdateTick = 0;
-        private int moveSpeed = 500; // px/sec
+        private int moveSpeed = 1100; // px/sec
 
         #region CONSTRUCTION
         public VisualizerBar(ContentManager contentman, int bottom, int x, int width, int maxheight)
