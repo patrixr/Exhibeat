@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Exhibeat.Gameplay
 {
+    /// <summary>
+    /// Time representation of a note 
+    /// </summary>
     public class Note
     {
         public int Offset { get; set; }

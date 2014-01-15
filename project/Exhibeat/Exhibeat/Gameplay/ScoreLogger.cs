@@ -7,6 +7,9 @@ using Microsoft.Xna.Framework;
 
 namespace Exhibeat.Gameplay
 {
+    /// <summary>
+    /// Keeps track of all the score updates and combos
+    /// </summary>
     class ScoreLogger : ITimeEventReciever
     {
         private List<float> graphValues = new List<float>();
@@ -24,6 +27,7 @@ namespace Exhibeat.Gameplay
             hitCounts[userEvent.NOTENORMAL] = 0;
             hitCounts[userEvent.NOTEVERYGOOD] = 0;
         }
+
 
         public int GetHitCount(userEvent ev)
         {

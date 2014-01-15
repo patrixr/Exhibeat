@@ -1,6 +1,4 @@
 Content\plain.xnb
-Content\exhibeatFont.xnb
-Content\scorefont.xnb
 Content\hexagon_empty.xnb
 Content\hexagon_base.xnb
 Content\tile_animation_test.xnb
@@ -15,6 +13,12 @@ Content\score_excellent.xnb
 Content\score_great.xnb
 Content\score_miss.xnb
 Content\score_perfect.xnb
+Content\tile_animation_test_sheet.xnb
+Content\running-test-sheet.xnb
+Content\GaussianBlur.xnb
+Content\GaussianBlur2.xnb
+Content\exhibeatFont.xnb
+Content\scorefont.xnb
 Content\Press Start.xnb
 Content\Title Logo.xnb
 Content\Title screenbg2.xnb
@@ -51,7 +55,4 @@ Content\SongSelectionScreen\Title.xnb
 Content\SongSelectionScreen\SelectedSong.xnb
 Content\SongSelectionScreen\UnSelectedSong.xnb
 Content\SongSelectionScreen\square.xnb
-Content\tile_animation_test_sheet.xnb
-Content\running-test-sheet.xnb
-Content\GaussianBlur.xnb
-Content\GaussianBlur2.xnb
+Content\score-x.xnb

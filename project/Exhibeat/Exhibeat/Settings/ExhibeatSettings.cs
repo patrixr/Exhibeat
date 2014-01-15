@@ -7,6 +7,9 @@ using Exhibeat.AudioPlayer;
 
 namespace Exhibeat.Settings
 {
+    /// <summary>
+    /// Contains all the settings and project configuration
+    /// </summary>
     public class ExhibeatSettings
     {
         public static bool ResolutionIndependent = true;
@@ -40,7 +43,7 @@ namespace Exhibeat.Settings
         public static bool SlidingBackgroundColorChange = true;
 
 
-        public static string ResourceFolder = "E:\\Nashmun\\Desktop\\test\\";
+        public static string ResourceFolder = ".\\test\\";
 
         private static IAudioManager audioManager = null;
 
