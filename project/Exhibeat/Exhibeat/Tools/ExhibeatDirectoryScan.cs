@@ -13,6 +13,10 @@ namespace Exhibeat_SongDirectory_Scan
         private static string fileName = "ExhibeatSongFile.xml";
         private List<string> songPath = new List<string>();
 
+        /// <summary>
+        /// Scan the specific folder to get all the songs
+        /// </summary>
+        /// <param name="targetDirectory"></param>
         public void ScanSongDirectory(string targetDirectory)
         {
             ProcessDirectory(targetDirectory);
@@ -45,7 +49,11 @@ namespace Exhibeat_SongDirectory_Scan
                 songPath.Add(path);
             }
         }
-       
+       /// <summary>
+       /// Load a XML with all the founded songs
+       /// </summary>
+       /// <param name="xmlPath"></param>
+       /// <returns></returns>
         public List<string> loadPathXML(string xmlPath)
         {
             List<string> songPath = new List<string>();
@@ -63,6 +71,10 @@ namespace Exhibeat_SongDirectory_Scan
             }
             return songPath;
         }
+        /// <summary>
+        /// Create a xml with all the founded songs
+        /// </summary>
+        /// <param name="xmlPath"></param>
         public void savePathXML(string xmlPath)
         {
             XmlDocument doc = new XmlDocument();

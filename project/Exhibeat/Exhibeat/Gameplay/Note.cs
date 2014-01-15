@@ -6,7 +6,7 @@ using System.Text;
 namespace Exhibeat.Gameplay
 {
     /// <summary>
-    /// Time representation of a note 
+    /// Basic class for note
     /// </summary>
     public class Note
     {

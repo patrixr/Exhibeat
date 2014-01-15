@@ -5,24 +5,15 @@ using System.Text;
 
 namespace Exhibeat.Gameplay
 {
-
-    public enum difficulty
+   
+    public class MapPreview
     {
-        EASY,
-        MEDIUM,
-        HARD,
-        INSANE
-    }
-
-    public class Map
-    {
-        // Section [NOTE] - note list
-        private List<Note> _timeMap;
+        public string FilePath { get; set; }
 
         // Section [SONG] - song info
         public string Title { get; set; }
         public string Artist { get; set; }
-        public int Length { get; set; }
+        public int Length { get; set; } 
 
         // Section [MAP] - map specific info
         public difficulty Difficulty { get; set; }
@@ -30,16 +21,21 @@ namespace Exhibeat.Gameplay
         public int Offset { get; set; }
         public float Bpm { get; set; }
 
-
-        public Map(List<Note> TimeMap)
-        {
-            _timeMap = TimeMap;
-        }
-
-        public Map(List<Note> TimeMap, string title, string artist, int length, difficulty difficulty,
+        /// <summary>
+        /// Create a preview of the song for the SongSelection Screen
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="title"></param>
+        /// <param name="artist"></param>
+        /// <param name="length"></param>
+        /// <param name="difficulty"></param>
+        /// <param name="path"></param>
+        /// <param name="offset"></param>
+        /// <param name="bpm"></param>
+        public MapPreview(string filePath, string title, string artist, int length, difficulty difficulty,
                     string path, int offset, float bpm)
         {
-            _timeMap = TimeMap;
+            FilePath = filePath;
             Title = title;
             Artist = artist;
             Length = length;
@@ -48,29 +44,9 @@ namespace Exhibeat.Gameplay
             Offset = offset;
             Bpm = bpm;
         }
-
-        public List<Note> GetNotesFromIndex(int index, int nb)
-        {
-            List<Note> result = new List<Note>();
-            if (index < _timeMap.Count)
-            {
-                for (int idx = index; idx < index + nb && idx < _timeMap.Count; idx++)
-                {
-                    result.Add(_timeMap[idx]);
-                }
-            }
-            return result.Count > 0 ? result : null;
-        }
-        public List<Note> GetNotesBetweenOffsets(int offset1, int offset2)
-        {
-            List<Note> result = new List<Note>();
-            foreach (Note currentNote in _timeMap)
-            {
-                if (currentNote.Offset >= offset1 && currentNote.Offset <= offset2)
-                    result.Add(currentNote);
-            }
-            return result.Count > 0 ? result : null;
-        }
+        /// <summary>
+        /// Debug
+        /// </summary>
         public void showClassData()
         {
             string output = "";
@@ -84,17 +60,27 @@ namespace Exhibeat.Gameplay
             output += this.Path + "\n";
             output += this.Offset + "\n";
             output += this.Bpm + "\n";
-            output += "[NOTES]\n";
-
-            foreach (Note note in this._timeMap)
-            {
-                output += note.Offset + ", ";
-                output += note.Length + ", ";
-                output += note.Button + ", ";
-                output += "\n";
-            }
-
             Console.Write(output);
+        }
+        /// <summary>
+        /// Debug
+        /// </summary>
+        /// <returns></returns>
+        public override string  ToString()
+        {
+            string output = "";
+
+            output += "[SONG]\n";
+            output += "Title : " + this.Title + "\n";
+            output += "Artist : " + this.Artist + "\n";
+            output += "Length : " + this.Length + "\n";
+            output += "[MAP]\n";
+            output += "Difficulty : " + this.Difficulty + "\n";
+            output += "SongPath : " + this.Path + "\n";
+            output += "Offset : " + this.Offset + "\n";
+            output += "BPM : " + this.Bpm + "\n";
+
+            return output;
         }
     }
 }

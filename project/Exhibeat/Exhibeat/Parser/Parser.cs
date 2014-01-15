@@ -14,6 +14,11 @@ namespace Exhibeat.Parser
         private Map _map;
         public string[] _labels = { "[SONG]", "[MAP]", "[NOTES]" };
 
+        /// <summary>
+        /// Parse an exi file to get notes and parameters
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public Map parse(string path)
         {
             string buffer = null;
@@ -44,6 +49,11 @@ namespace Exhibeat.Parser
             }
             return _map;
         }
+        /// <summary>
+        /// Get the info about each lines of the file
+        /// </summary>
+        /// <param name="label"></param>
+        /// <param name="info"></param>
         private void setSongInfo(string label, string info)
         {
             switch (label)
@@ -59,6 +69,12 @@ namespace Exhibeat.Parser
                     break;
             }
         }
+        /// <summary>
+        /// Remove the label from the value
+        /// </summary>
+        /// <param name="labelList"></param>
+        /// <param name="infos"></param>
+        /// <returns></returns>
         private string[] removeLabel(string[] labelList, string[] infos)
         {
             foreach (string element in labelList)
@@ -70,6 +86,10 @@ namespace Exhibeat.Parser
             }
             return infos;
         }
+        /// <summary>
+        /// Check if the file is correct by looking for the data
+        /// </summary>
+        /// <param name="info"></param>
         private void setSongLabel(string info)
         {
             string[] elementToRemove = { "Title ", "Artist ", "Lenght " };
@@ -81,6 +101,11 @@ namespace Exhibeat.Parser
             _map.Artist = infos[2];
             _map.Length = int.Parse(infos[3]);
         }
+        /// <summary>
+        /// Get the difficulty inside the file
+        /// </summary>
+        /// <param name="diff"></param>
+        /// <returns></returns>
         private static difficulty getDifficulty(string diff)
         {
             string[] enums = Enum.GetNames(typeof(difficulty));
@@ -93,6 +118,10 @@ namespace Exhibeat.Parser
             }
             return 0;
         }
+        /// <summary>
+        /// Parse BPM and Difficulty
+        /// </summary>
+        /// <param name="info"></param>
         private void setMapLabel(string info)
         {
             string[] elementToRemove = { "Difficulty ", "MP3 ", "Offset ", "BPM " };
@@ -104,7 +133,10 @@ namespace Exhibeat.Parser
             _map.Offset = int.Parse(infos[3]);
             _map.Bpm = float.Parse(infos[4]);
         }
-
+        /// <summary>
+        /// Get the notes in an array tab
+        /// </summary>
+        /// <param name="info"></param>
         private void setNotesLabel(string info)
         {
             string[] infos = info.Split('\n');
@@ -143,7 +175,11 @@ namespace Exhibeat.Parser
                 }
             }
         }
-
+        /// <summary>
+        /// Remove extra char from windows
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <returns></returns>
         private string[] cleanStringArray(string[] buffer)
         {
             for (int i = 0; i < buffer.Length; i++)
@@ -152,7 +188,11 @@ namespace Exhibeat.Parser
             }
             return buffer;
         }
-
+        /// <summary>
+        /// Check presence of label
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <returns></returns>
         private bool checkLabelExistence(string[] buffer)
         {
             foreach (string label in _labels)
@@ -162,7 +202,12 @@ namespace Exhibeat.Parser
             }
             return true;
         }
-
+        /// <summary>
+        /// Get the value of each notes
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <param name="label"></param>
+        /// <returns></returns>
         private string getSongInfo(string[] buffer, string label)
         {
             int pos = System.Array.IndexOf(buffer, label);
@@ -178,6 +223,11 @@ namespace Exhibeat.Parser
             }
             return output;
         }
+        /// <summary>
+        /// Get all data with regex
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public static MapPreview getSongInfo(string path)
         {
             StreamReader myFile = new StreamReader(path);
@@ -195,6 +245,11 @@ namespace Exhibeat.Parser
 
             return (new MapPreview(path, title, artist, int.Parse(lenght), getDifficulty(difficulty), mp3Path, int.Parse(offset), int.Parse(bpm)));
         }
+        /// <summary>
+        /// Parse the File and send it to get the data
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public byte[] parser(String path)
         {
             FileStream fileStream = null;
@@ -222,6 +277,12 @@ namespace Exhibeat.Parser
             }
             return buffer;
         }
+        /// <summary>
+        /// Regex function on C#
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="str"></param>
+        /// <returns></returns>
         public static string extractValueFromString(string key, string str)
         {
             //#Title ([a-zA-Z0-9\\-\\.\\'\\(\\) ]+)
