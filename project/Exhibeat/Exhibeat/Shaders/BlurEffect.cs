@@ -15,6 +15,7 @@ namespace Exhibeat.Shaders
         private Effect _blur;
         private RenderTarget2D _horzBuffer;
         private RenderTarget2D _vertBuffer;
+        private RenderTarget2D _original_buffer;
 
         public BlurEffect(GraphicsDevice graphicsDevice, ContentManager content) : base(graphicsDevice, content)
         {
@@ -26,19 +27,19 @@ namespace Exhibeat.Shaders
             bbHeight = (int)(graphicsDevice.Viewport.Height * BLUR_BUFFER_SCALE);
             _horzBuffer = new RenderTarget2D(_device, bbWidth, bbHeight);
             _vertBuffer = new RenderTarget2D(_device, bbWidth, bbHeight);
+            _original_buffer = new RenderTarget2D(_device, bbWidth, bbHeight);
         }
         override public void start()
         {
             _device.SetRenderTarget(_buffer);
-            _device.Clear(Color.Black);
-
+            //_device.Clear(Color.Transparent);
 
         }
         override public void end()
         {
             _device.SetRenderTarget(null);
         }
-        override public void applyEffect(SpriteBatch spriteBatch)
+        override public void applyEffect(SpriteBatch spriteBatch, Texture2D predraw = null)
         {
             Texture2D scene;
             scene = (Texture2D)_buffer;
@@ -62,6 +63,8 @@ namespace Exhibeat.Shaders
             spriteBatch.Draw(scene, new Vector2(0, 0), Color.White);
             spriteBatch.End();*/
             spriteBatch.Begin(0, BlendState.Opaque);
+            if (predraw != null)
+                spriteBatch.Draw(predraw, _buffer.Bounds, Color.White);
             spriteBatch.Draw((Texture2D)_vertBuffer, _buffer.Bounds, Color.White);
             spriteBatch.End();
         }
@@ -133,6 +136,30 @@ namespace Exhibeat.Shaders
 
             return (float)((1.0 / Math.Sqrt(2 * Math.PI * theta)) *
                            Math.Exp(-(n * n) / (2 * theta * theta)));
+        }
+
+        static RenderTarget2D CloneRenderTarget(RenderTarget2D target)
+        {
+            var clone = new RenderTarget2D(target.GraphicsDevice, target.Width,
+                target.Height, target.LevelCount > 1, target.Format,
+                target.DepthStencilFormat, target.MultiSampleCount,
+                target.RenderTargetUsage);
+
+            for (int i = 0; i < target.LevelCount; i++)
+            {
+                double rawMipWidth = target.Width / Math.Pow(2, i);
+                double rawMipHeight = target.Height / Math.Pow(2, i);
+
+                // make sure that mipmap dimensions are always > 0.
+                int mipWidth = (rawMipWidth < 1) ? 1 : (int)rawMipWidth;
+                int mipHeight = (rawMipHeight < 1) ? 1 : (int)rawMipHeight;
+
+                var mipData = new Color[mipWidth * mipHeight];
+                target.GetData(i, null, mipData, 0, mipData.Length);
+                clone.SetData(i, null, mipData, 0, mipData.Length);
+            }
+
+            return clone;
         }
     }
 }

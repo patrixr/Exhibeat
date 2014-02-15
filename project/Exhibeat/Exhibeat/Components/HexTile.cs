@@ -72,7 +72,12 @@ namespace Exhibeat.Components
         private ContentManager content;
         private Texture2D texture_base;
 
+        private int elapsed_ms = 0;
+        private int glowApparitionSpeed = 10; //(opacity/sec)
+
         BlurEffect      blurEffect;
+
+        Color glowColor = Color.Orange;
 
 #if ANIMATED_TILE
         private SpriteSheet spritesheet;
@@ -126,7 +131,7 @@ namespace Exhibeat.Components
             press_origin = new Vector2(texture_press.Width / 2, texture_press.Height / 2);
             notes = new List<VisualNote>();
 
-            clapSongIdx = ExhibeatSettings.GetAudioManager().open(ExhibeatSettings.ResourceFolder + "taiko-normal-hitclap.wav");
+           // clapSongIdx = ExhibeatSettings.GetAudioManager().open(ExhibeatSettings.ResourceFolder + "clap.wav");
             blurEffect = null;
         }
 
@@ -143,7 +148,7 @@ namespace Exhibeat.Components
             spriteBatch.Begin();*/
             
              if (glowOpacity > 0f)
-                spriteBatch.Draw(texture_press, position, null, Color.Orange * glowOpacity, 0, press_origin, Scale, SpriteEffects.None, 0);
+                 spriteBatch.Draw(texture_press, position, null, glowColor * glowOpacity, 0, press_origin, Scale, SpriteEffects.None, 0);
 
              spriteBatch.Draw(texture_base, position, null, Color.White, 0, note_origin, Scale, SpriteEffects.None, 0);
           
@@ -169,12 +174,10 @@ namespace Exhibeat.Components
             {
                 VisualNote note = notes[i];
                 note.Update(ExhibeatSettings.TimeElapsed /*gameTime.ElapsedGameTime.Milliseconds*/);
-                if (note.time_left < 0)
+                if (note.time_left <= 0)
                 {
                     notes.Remove(note);
-                    ExhibeatSettings.GetAudioManager().stop(clapSongIdx);
-                    ExhibeatSettings.GetAudioManager().play(clapSongIdx);
-                    Press();
+                    //Press();
                     i--;
                 }
 #if ANIMATED_TILE
@@ -185,6 +188,9 @@ namespace Exhibeat.Components
 
             if (pressAnimation)
             {
+                elapsed_ms += gameTime.ElapsedGameTime.Milliseconds;
+                if (elapsed_ms < 10)
+                    return;
                 if (glowTargetOpacity > 0f) // apparition
                 {
                     if (glowOpacity >= 0.7f)
@@ -195,21 +201,29 @@ namespace Exhibeat.Components
                 else // disparition
                 {
                     if (glowOpacity > 0f)
-                        glowOpacity -= 0.01f;
+                        glowOpacity -= 0.1f;
                     else
                     {
                         glowOpacity = 0f;
                         pressAnimation = false;
                     }
-
                 }
+                elapsed_ms = 0;
             }
+        }
+
+        public void Press(Color col)
+        {
+            pressAnimation = true;
+            glowTargetOpacity = 1f;
+            glowColor = col;
         }
 
         public void Press()
         {
             pressAnimation = true;
             glowTargetOpacity = 1f;
+            glowColor = Color.Orange;
         }
 
         public void NewNote(int duration)

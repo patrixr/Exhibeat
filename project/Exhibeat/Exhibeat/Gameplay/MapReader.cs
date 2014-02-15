@@ -9,7 +9,7 @@ using Exhibeat.Settings;
 using ExhiBeat.KeyReader;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework;
-using Exhibeat.Settings;
+using Exhibeat.Screens;
 
 /// <summary>
 /// en attendant la class
@@ -18,7 +18,7 @@ namespace Exhibeat.Gameplay
 {
     public class MapReader : ITimeEventEmitter
     {
-        public class EventRecievers
+          public class EventRecievers
         {
             public ITimeEventReciever recv;
             public bool songEvents;
@@ -30,13 +30,13 @@ namespace Exhibeat.Gameplay
                 songEvents = songEvent;
                 userEvents = userEvent;
             }
-
         };
 
         protected UInt16                _delay = 1000;
         protected EXParser              _parser;
         protected Map                   _currentMap;
         protected List<Note>            _upcomingNotes;
+        protected List<List<Note> >     _displayedNoteQueues;
 
         protected int                   _timeElapsed;
         protected int                   _currentPos;
@@ -49,6 +49,8 @@ namespace Exhibeat.Gameplay
         protected IAudioManager _audioManager;
         protected int           _songIndex;
         protected int           _songIndex2;
+        private   int           comboBreakIdx;
+        private   int           clapSongIdx;
 
         protected bool _songPlaying = false;
         protected bool _notePlayed = false;
@@ -62,6 +64,9 @@ namespace Exhibeat.Gameplay
             _line = 0;
             _eventReceiverList = new List<EventRecievers>();
             _keyReader = new KeyReader();
+            _displayedNoteQueues = new List<List<Note>>(7);
+            for (int i = 0; i < 7; i++)
+                _displayedNoteQueues.Add(new List<Note>());
         }
 
         #region GAME OVERRIDE
@@ -70,17 +75,18 @@ namespace Exhibeat.Gameplay
         {
             _parser = new EXParser();
             _audioManager = ExhibeatSettings.GetAudioManager();
+            comboBreakIdx = _audioManager.open(ExhibeatSettings.ResourceFolder + "combobreak.wav");
+            clapSongIdx = _audioManager.open(ExhibeatSettings.ResourceFolder + "clap.wav");
         }
 
         public bool Read(string songFilePath)
         {
-            _currentMap  = _parser.parse(ExhibeatSettings.ResourceFolder + songFilePath);
 
-            //_currentMap = _parser.parse(songFilePath);
+            _currentMap = _parser.parse(songFilePath);
 
             if (_currentMap == null)
                 return false;
-            _songIndex = _audioManager.open(ExhibeatSettings.ResourceFolder + _currentMap.Path);
+            _songIndex = _audioManager.open(ExhibeatSettings.ResourceFolder + _currentMap.Artist + " - " + _currentMap.Title + "/" + _currentMap.Path);
             return true;
         }
         public bool Play()
@@ -133,7 +139,36 @@ namespace Exhibeat.Gameplay
                 _currentPos = tmp;
                 ExhibeatSettings.TimeElapsed = _timeElapsed;
 
+                // WE CHECK THE DISPLAYED NOTES TO CHECK IF SOME HAVE BEEN MISSED
+                _currentPos = (int)_audioManager.getCurrentPosMs(_songIndex);
+                foreach (List<Note> note_queue in _displayedNoteQueues)
+                {
+                    while (note_queue.Count > 0)
+                    {
+                        Note note = note_queue[0];
+                        int diff = Math.Abs(note.Offset - _currentPos);
+
+                        // IS THE NOTE PAST AND FAILED ?
+                        if ((note.Offset < _currentPos) && diff > 100)
+                        {
+                            if (GameScreen.missSound)
+                            {
+                                ExhibeatSettings.GetAudioManager().stop(comboBreakIdx);
+                                ExhibeatSettings.GetAudioManager().play(comboBreakIdx);
+                            }
+                            SendEvent(userEvent.NOTEFAIL, new NoteEventParameter() { note = note.Button, delayms = diff });
+                            note_queue.RemoveAt(0);
+                            continue;
+                        }
+                        break;
+                    }
+                }
+
+                //Console.WriteLine(_displayedNoteQueues[0].Count);
+                // CHECK FOR BUTTON PRESS
                 handleUserInput();
+
+                // REFRESH NOTES DISPLAYED ON THE SCREEN
                 foreach (Note note in _upcomingNotes)
                 {
                     int delay;
@@ -141,10 +176,19 @@ namespace Exhibeat.Gameplay
                     if (delay <= ExhibeatSettings.TileGrowthDuration)
                     {
                         SendEvent(songEvent.NEWNOTE, new NoteEventParameter() { note = note.Button, delayms = delay });
-                        Console.WriteLine("playing button " + note.Length + " at " + note.Offset + " with a delay of " + delay);
+                        //Console.WriteLine("playing button " + note.Length + " at " + note.Offset + " with a delay of " + delay);
 
+                        // WE KEEP THE NOTES CURRENTLY BEING DISPLAYED IN _displayedNoteQueues
+                        // @FIX double notes
+                        if (_displayedNoteQueues[note.Button].Count == 0 ||
+                            _displayedNoteQueues[note.Button].Last().Offset != note.Offset)
+                        {
+                            _displayedNoteQueues[note.Button].Add(new Note(note.Offset, note.Length, note.Button));
+                        }
                         _line++;
                     }
+                    else
+                        break;
                 }
             }
         }
@@ -153,20 +197,36 @@ namespace Exhibeat.Gameplay
 
         private void handleUserInput()
         {
-            Key _key = new Key();
-            while ((_key = _keyReader.getNextKeyEvent()) != null)
+            Key key;
+            while ((key = _keyReader.getNextKeyEvent()) != null)
             {
-                if (_key.type == keyType.pressed)
+                if (key.type == keyType.pressed)
                 {
+                    ExhibeatSettings.GetAudioManager().stop(clapSongIdx);
+                    ExhibeatSettings.GetAudioManager().play(clapSongIdx);
                     _currentPos = (int)_audioManager.getCurrentPosMs(_songIndex);
-                    SendEvent(userEvent.NOTEPRESSED, new NoteEventParameter() { note = _key.pos, delayms = 0 });
-                    foreach (Note note in _upcomingNotes)
+                    if (_displayedNoteQueues[key.pos].Count == 0)
+                        SendEvent(userEvent.NOTEPRESSED, new NoteEventParameter() { note = key.pos, delayms = 0 });
+                    while (_displayedNoteQueues[key.pos].Count > 0)
                     {
-                        //TIMING
+                        // TIMING
+                        Note note = _displayedNoteQueues[key.pos][0];
+                        int diff = Math.Abs(note.Offset - _currentPos);
+                        Console.WriteLine(diff);
+                        if (diff <= 54)
+                            SendEvent(userEvent.NOTEVERYGOOD, new NoteEventParameter() { note = key.pos, delayms = diff });
+                        else if (diff <= 106)
+                            SendEvent(userEvent.NOTEGOOD, new NoteEventParameter() { note = key.pos, delayms = diff });
+                        else if (diff <= 158)
+                            SendEvent(userEvent.NOTENORMAL, new NoteEventParameter() { note = key.pos, delayms = diff });
+                        else
+                            SendEvent(userEvent.NOTEFAIL, new NoteEventParameter() { note = key.pos, delayms = diff });
+                        _displayedNoteQueues[key.pos].RemoveAt(0);
+                        break;
                     }
                 }
-                else if (_key.type == keyType.realeased)
-                    SendEvent(userEvent.NOTERELEASED, new NoteEventParameter() { note = _key.pos, delayms = 0 });
+                else if (key.type == keyType.realeased)
+                    SendEvent(userEvent.NOTERELEASED, new NoteEventParameter() { note = key.pos, delayms = 0 });
             }
         }
 

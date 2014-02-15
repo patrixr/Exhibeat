@@ -167,18 +167,35 @@ namespace Exhibeat.Components
         }
         public void NewUserEvent(userEvent ev, Object param)
         {
-            if (ev == userEvent.NOTEPRESSED)
-            {
+            if (ev == userEvent.NOTEPRESSED) {
                 NoteEventParameter p = (NoteEventParameter)param;
                 tiles[p.note].Press();
             }
-            else if (ev == userEvent.NOTERELEASED)
+            else if (ev == userEvent.NOTEGOOD)
             {
-                //NoteEventParameter p = (NoteEventParameter)param;
-                //tiles[p.note].NoteReleased();
+                NoteEventParameter p = (NoteEventParameter)param;
+                tiles[p.note].Press(Color.Turquoise);
             }
-            else
-                throw new NotImplementedException();
+            else if (ev == userEvent.NOTENORMAL)
+            {
+                NoteEventParameter p = (NoteEventParameter)param;
+                tiles[p.note].Press(Color.Yellow);
+            }
+            else if (ev == userEvent.NOTEVERYGOOD)
+            {
+                NoteEventParameter p = (NoteEventParameter)param;
+                tiles[p.note].Press(Color.Green);
+            }
+            else if (ev == userEvent.NOTEBAD)
+            {
+                NoteEventParameter p = (NoteEventParameter)param;
+                tiles[p.note].Press(Color.OrangeRed);
+            }
+            else if (ev == userEvent.NOTEFAIL)
+            {
+                NoteEventParameter p = (NoteEventParameter)param;
+                tiles[p.note].Press(Color.Red);
+            }
         }
         #endregion
     }

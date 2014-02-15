@@ -42,6 +42,7 @@ namespace Exhibeat
 #if DEBUG
             fpsDisplay = new FPSDisplay(Content.Load<SpriteFont>("plain"));
 #endif
+            new Exhibeat_SongDirectory_Scan.ExhibeatDirectoryScan().ScanSongDirectory(ExhibeatSettings.ResourceFolder);
 
             base.Initialize();
         }
@@ -53,7 +54,7 @@ namespace Exhibeat
         protected override void LoadContent()
         {
             // Err mgmnt
-            this.screenManager.pushScreen(new GameScreen(this));
+            this.screenManager.pushScreen(new TitleScreen(this));
 
             base.LoadContent();
         }

@@ -22,9 +22,11 @@ namespace Exhibeat.Components
             public bool appear = false;
             public bool isGrowing = false;
             public int timeout_ms = 0;
+            public int elapsed_ms = 0;
             public Rectangle dest;
             public int x_dest;
             private ParticleEmitter particle_emitter;
+            public int moveSpeed = 300; //px/s
 
             public GradeSprite(ContentManager content, int y, Texture2D texture, bool particles = false)
             {
@@ -35,12 +37,18 @@ namespace Exhibeat.Components
 
                 if (particles)
                 {
-                    RandomParticleGenerator pg = new RandomParticleGenerator(true, 0f, 50f, 1000);
+                    RandomParticleGenerator pg = new RandomParticleGenerator(true, 0.1f, 5f, 1000);
                  
-                    pg.Textures.Add(content.Load<Texture2D>("square"));
+                    pg.Textures.Add(content.Load<Texture2D>("particles/1"));
+                    pg.Textures.Add(content.Load<Texture2D>("particles/2"));
+                    pg.Textures.Add(content.Load<Texture2D>("particles/3"));
+                    pg.Textures.Add(content.Load<Texture2D>("particles/4"));
+                    pg.Textures.Add(content.Load<Texture2D>("particles/5"));
+                    pg.Textures.Add(content.Load<Texture2D>("particles/6"));
                     
                    
                     particle_emitter = new ParticleEmitter(pg, new Vector2(ExhibeatSettings.WindowWidth - texture.Width, y));
+                    
                     particle_emitter.GenerationCount = 40;
                 }
                 else
@@ -56,7 +64,10 @@ namespace Exhibeat.Components
                     if (isGrowing)
                     {
                         if (dest.X > x_dest) // not fully grown
-                            dest.X -= 2 * gameTime.ElapsedGameTime.Milliseconds;
+                        {
+                            //dest.X -= 2 * gameTime.ElapsedGameTime.Milliseconds;
+                            dest.X = x_dest;
+                        }
                         else
                         {
                             dest.X = x_dest;
@@ -65,7 +76,7 @@ namespace Exhibeat.Components
                                 if (particle_emitter != null && gameTime.IsRunningSlowly == false)
                                     particle_emitter.Start();
                             }
-                            if (timeout_ms > 400)
+                            if (timeout_ms > 300)
                             {
                                 timeout_ms = 0;
                                 isGrowing = false;
@@ -78,12 +89,17 @@ namespace Exhibeat.Components
                     }
                     else
                     {
-                        if (dest.X < ExhibeatSettings.WindowWidth)
-                            dest.X += 2 * gameTime.ElapsedGameTime.Milliseconds;
-                        else
+                        elapsed_ms += gameTime.ElapsedGameTime.Milliseconds;
+                        if (elapsed_ms > 10)
                         {
-                            dest.X = ExhibeatSettings.WindowWidth;
-                            appear = false;
+                            if (dest.X < ExhibeatSettings.WindowWidth)
+                                dest.X += (int)((moveSpeed * elapsed_ms) / 1000);
+                            else
+                            {
+                                dest.X = ExhibeatSettings.WindowWidth;
+                                appear = false;
+                            }
+                            elapsed_ms = 0;
                         }
                     }
                 }

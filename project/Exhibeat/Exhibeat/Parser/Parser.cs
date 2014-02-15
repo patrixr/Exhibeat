@@ -178,7 +178,23 @@ namespace Exhibeat.Parser
             }
             return output;
         }
+        public static MapPreview getSongInfo(string path)
+        {
+            StreamReader myFile = new StreamReader(path);
+            string myString = myFile.ReadToEnd();
+            myFile.Close();
 
+            string title = extractValueFromString("#Title ", myString);
+            string artist = extractValueFromString("#Artist ", myString);
+            string lenght = extractValueFromString("#Lenght ", myString);
+
+            string difficulty = extractValueFromString("#Difficulty ", myString);
+            string mp3Path = extractValueFromString("#MP3 ", myString);
+            string offset = extractValueFromString("#Offset ", myString);
+            string bpm = extractValueFromString("#BPM ", myString);
+
+            return (new MapPreview(path, title, artist, int.Parse(lenght), getDifficulty(difficulty), mp3Path, int.Parse(offset), int.Parse(bpm)));
+        }
         public byte[] parser(String path)
         {
             FileStream fileStream = null;

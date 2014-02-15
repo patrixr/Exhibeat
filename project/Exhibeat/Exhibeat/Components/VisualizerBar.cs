@@ -27,6 +27,7 @@ namespace Exhibeat.Components
         private int X = 0;
         private int ElapsedTime = 0;
         private int ColorUpdateTick = 0;
+        private int moveSpeed = 1100; // px/sec
 
         #region CONSTRUCTION
         public VisualizerBar(ContentManager contentman, int bottom, int x, int width, int maxheight)
@@ -70,28 +71,41 @@ namespace Exhibeat.Components
             spriteBatch.Draw(square, dest, null, displayCol, rot, Vector2.Zero, SpriteEffects.None, 0);
         }
 
+        //private int test = 0;
+
         public override void Update(GameTime gameTime)
         {
             UpdateColor(gameTime);
+            ElapsedTime += gameTime.ElapsedGameTime.Milliseconds;
+            //test++;
             if (AimedHeight != Height)
             {
-      
-                    if (AimedHeight > Height)
-                        Height += 2;
-                    else
-                        Height -= 1;
-                    dest.Y = Bottom - Height;
-                    dest.Height =  Height;
+                //if (test % 2 == 0)
+                  //  return;
+                if (ElapsedTime < 5)
+                    return;
+                if (AimedHeight > Height)
+                {
+                    Height += (moveSpeed * ElapsedTime) / 1000;
+                    if (Height > AimedHeight)
+                        Height = AimedHeight;
                     ElapsedTime = 0;
-              //  }
-               // else
-                //{
-                  //  ElapsedTime += gameTime.ElapsedGameTime.Milliseconds;
-                //}
+                }
+                else
+                {
+                    Height -= (moveSpeed * ElapsedTime) / 1000 / 2;
+                    if (Height < 0)
+                        Height = 0;
+                    ElapsedTime = 0;
+                }
+
+                dest.Y = Bottom - Height;
+                dest.Height =  Height;
+                if (AimedHeight == Height)
+                    ElapsedTime = 0;
             }
             else
             {
-                ElapsedTime += gameTime.ElapsedGameTime.Milliseconds;
                 if (ElapsedTime >= 100)
                 {
                     SetHeight(0);
@@ -119,7 +133,7 @@ namespace Exhibeat.Components
                 else if (col.B == 255 && col.R < 255 && col.G == 0)
                     col.R++;
                 else if (col.R == 255 && col.B > 0 && col.G == 0)
-                    col.B++;
+                    col.B--;
                 ColorUpdateTick = 0;
             }
         }
